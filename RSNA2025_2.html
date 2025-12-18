@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSNA 2025 Competitive Analysis Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9fc;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+            color: white;
+            padding: 25px 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .vendor-logos {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .vendor-logo {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .ge { color: #00a3e0; }
+        .philips { color: #009ed6; }
+        .siemens { color: #009999; }
+        .canon { color: #dc291e; }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        
+        .tab-btn:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .tab-btn.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .filter-section {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: white;
+            font-weight: 500;
+            min-width: 180px;
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f7ff;
+        }
+        
+        .clinical-areas {
+            list-style: none;
+        }
+        
+        .clinical-area {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .clinical-area:hover {
+            background-color: #f0f7ff;
+            transform: translateX(5px);
+        }
+        
+        .clinical-area.active {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2c3e50;
+            font-weight: 600;
+        }
+        
+        .count-badge {
+            background: #e9ecef;
+            color: #495057;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+        
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            min-height: 600px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .vendor-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .vendor-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .vendor-card.ge-card { border-color: #00a3e0; }
+        .vendor-card.philips-card { border-color: #009ed6; }
+        .vendor-card.siemens-card { border-color: #009999; }
+        .vendor-card.canon-card { border-color: #dc291e; }
+        
+        .vendor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .vendor-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        
+        .platform-name {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            list-style: none;
+        }
+        
+        .feature-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-label {
+            font-weight: 600;
+            color: #444;
+        }
+        
+        .feature-value {
+            text-align: right;
+            color: #666;
+            max-width: 70%;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+        
+        .comparison-table th {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .comparison-table tr:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .highlight {
+            background-color: #fffde7 !important;
+        }
+        
+        .strength-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .strong { background-color: #4caf50; }
+        .medium { background-color: #ff9800; }
+        .weak { background-color: #f44336; }
+        
+        .focus-areas {
+            margin-top: 30px;
+        }
+        
+        .focus-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #dc291e;
+        }
+        
+        .focus-card h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .focus-card p {
+            color: #666;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid #2c3e50;
+        }
+        
+        .summary-card h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .key-takeaway {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #00a3e0;
+        }
+        
+        .sub-tab-buttons {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        
+        .sub-tab-btn {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #555;
+            flex: 1;
+            text-align: center;
+        }
+        
+        .sub-tab-btn:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sub-tab-btn.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .clinical-detail-selector {
+            margin-bottom: 20px;
+        }
+        
+        .detail-select {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 2px solid #2c3e50;
+            background: white;
+            font-weight: 600;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .ai-breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .ai-breakdown-table th {
+            background-color: #4a6572;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .ai-breakdown-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .ai-breakdown-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .magnet-comparison {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .magnet-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-top: 5px solid;
+        }
+        
+        .magnet-card.philips { border-color: #009ed6; }
+        .magnet-card.siemens { border-color: #009999; }
+        
+        .magnet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .magnet-name {
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+        
+        .magnet-strength {
+            background: #e9ecef;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        
+        .economic-model {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .model-comparison {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .model-card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-top: 4px solid;
+        }
+        
+        .model-card.ge { border-color: #00a3e0; }
+        .model-card.philips { border-color: #009ed6; }
+        .model-card.siemens { border-color: #009999; }
+        .model-card.canon { border-color: #dc291e; }
+        
+        .model-name {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .model-type {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            padding: 20px;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+        }
+        
+        @media (max-width: 1400px) {
+            .comparison-grid, .model-comparison {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .magnet-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                order: 2;
+                position: static;
+            }
+            
+            .tab-buttons {
+                overflow-x: auto;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .vendor-logos {
+                flex-wrap: wrap;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .comparison-grid, .model-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-btn {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div>
+                    <h1>RSNA 2025 Competitive Analysis</h1>
+                    <p class="subtitle">Comparative analysis of medical imaging platforms: GE HealthCare, Philips, Siemens Healthineers, and Canon Medical</p>
+                </div>
+                <div class="vendor-logos">
+                    <div class="vendor-logo ge"><i class="fas fa-hospital"></i> GE HealthCare</div>
+                    <div class="vendor-logo philips"><i class="fas fa-heartbeat"></i> Philips</div>
+                    <div class="vendor-logo siemens"><i class="fas fa-bolt"></i> Siemens</div>
+                    <div class="vendor-logo canon"><i class="fas fa-camera"></i> Canon</div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="controls">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="overview">
+                    <i class="fas fa-chart-line"></i> Overview
+                </button>
+                <button class="tab-btn" data-tab="clinical">
+                    <i class="fas fa-stethoscope"></i> Clinical
+                </button>
+                <button class="tab-btn" data-tab="clinical-detail">
+                    <i class="fas fa-tasks"></i> Clinical Details
+                </button>
+                <button class="tab-btn" data-tab="technical">
+                    <i class="fas fa-microchip"></i> Technical
+                </button>
+                <button class="tab-btn" data-tab="magnet">
+                    <i class="fas fa-magnet"></i> Magnet Tech
+                </button>
+                <button class="tab-btn" data-tab="economic">
+                    <i class="fas fa-chart-pie"></i> Economic Models
+                </button>
+                <button class="tab-btn" data-tab="strategic">
+                    <i class="fas fa-chess-king"></i> Strategic Focus
+                </button>
+            </div>
+            
+            <div class="filter-section">
+                <select class="filter-select" id="clinicalFilter">
+                    <option value="all">All Clinical Areas</option>
+                    <option value="cardiac">Cardiac Imaging</option>
+                    <option value="oncology">Oncology</option>
+                    <option value="neuro">Neuroimaging</option>
+                    <option value="msk">Musculoskeletal</option>
+                    <option value="thoracic">Thoracic/Chest</option>
+                    <option value="abdominal">Abdominal & Pelvic</option>
+                    <option value="vascular">Vascular</option>
+                    <option value="pediatric">Pediatric</option>
+                    <option value="breast">Breast Imaging</option>
+                    <option value="point-of-care">Point-of-Care</option>
+                </select>
+                
+                <select class="filter-select" id="vendorFilter">
+                    <option value="all">All Vendors</option>
+                    <option value="ge">GE HealthCare</option>
+                    <option value="philips">Philips</option>
+                    <option value="siemens">Siemens</option>
+                    <option value="canon">Canon</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <h3><i class="fas fa-filter"></i> Clinical Areas</h3>
+                <ul class="clinical-areas">
+                    <li class="clinical-area active" data-area="all">
+                        All Clinical Domains
+                        <span class="count-badge">11</span>
+                    </li>
+                    <li class="clinical-area" data-area="cardiac">
+                        Cardiac Imaging
+                        <span class="count-badge">3</span>
+                    </li>
+                    <li class="clinical-area" data-area="oncology">
+                        Oncology
+                        <span class="count-badge">3</span>
+                    </li>
+                    <li class="clinical-area" data-area="neuro">
+                        Neuroimaging
+                        <span class="count-badge">6</span>
+                    </li>
+                    <li class="clinical-area" data-area="msk">
+                        Musculoskeletal
+                        <span class="count-badge">4</span>
+                    </li>
+                    <li class="clinical-area" data-area="thoracic">
+                        Thoracic/Chest
+                        <span class="count-badge">4</span>
+                    </li>
+                    <li class="clinical-area" data-area="abdominal">
+                        Abdominal & Pelvic
+                        <span class="count-badge">5</span>
+                    </li>
+                    <li class="clinical-area" data-area="vascular">
+                        Vascular (Non-Cardiac)
+                        <span class="count-badge">4</span>
+                    </li>
+                    <li class="clinical-area" data-area="pediatric">
+                        Pediatric Imaging
+                        <span class="count-badge">3</span>
+                    </li>
+                    <li class="clinical-area" data-area="breast">
+                        Breast Imaging
+                        <span class="count-badge">3</span>
+                    </li>
+                    <li class="clinical-area" data-area="point-of-care">
+                        Point-of-Care & Emergency
+                        <span class="count-badge">2</span>
+                    </li>
+                </ul>
+                
+                <div class="key-takeaway">
+                    <h4><i class="fas fa-lightbulb"></i> Key Insight</h4>
+                    <p>Canon's immediate strengths are in high-fidelity 3D processing, but it needs to evolve its cloud-native architecture and AI ecosystem to maintain competitiveness.</p>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <!-- Overview Tab Content -->
+                <div id="overview" class="tab-content active">
+                    <h2>Platform Overview</h2>
+                    <p class="subtitle">Comparative analysis of core platforms, strategic intent, and key differentiators</p>
+                    
+                    <div class="comparison-grid">
+                        <div class="vendor-card ge-card">
+                            <div class="vendor-header">
+                                <div class="vendor-name ge">GE HealthCare</div>
+                                <div class="strength-indicator strong"></div>
+                            </div>
+                            <div class="platform-name">Genesis™ Radiology Workspace</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Strategic Intent:</span>
+                                    <span class="feature-value">Cloud-native primary diagnostic cockpit for generalist radiologists</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">"Zero-footprint" web viewer with FHIRcast EMR integration</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Reported Impact:</span>
+                                    <span class="feature-value">Targets reducing ~64% of radiologist time on non-interpretive tasks</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="vendor-card philips-card">
+                            <div class="vendor-header">
+                                <div class="vendor-name philips">Philips</div>
+                                <div class="strength-indicator strong"></div>
+                            </div>
+                            <div class="platform-name">Advanced Visualization Workspace (AVW) 16</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Strategic Intent:</span>
+                                    <span class="feature-value">Specialized multi-modality processing suite for sub-specialists</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">Vendor-neutral platform with AI-driven quantitative analysis pipelines</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Reported Impact:</span>
+                                    <span class="feature-value">Up to 44% faster reading times for complex tasks like longitudinal brain MRI</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="vendor-card siemens-card">
+                            <div class="vendor-header">
+                                <div class="vendor-name siemens">Siemens Healthineers</div>
+                                <div class="strength-indicator medium"></div>
+                            </div>
+                            <div class="platform-name">Optiq AI & ActExcell</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Strategic Intent:</span>
+                                    <span class="feature-value">AI-optimized imaging for image-guided therapy + "Digital twin" simulation</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">AI embedded in imaging chain hardware for real-time optimization</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Reported Impact:</span>
+                                    <span class="feature-value">Lower radiation dose, higher image clarity for complex interventions</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="vendor-card canon-card">
+                            <div class="vendor-header">
+                                <div class="vendor-name canon">Canon Medical</div>
+                                <div class="strength-indicator weak"></div>
+                            </div>
+                            <div class="platform-name">Advanced Visualization Vitrea</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Strategic Intent:</span>
+                                    <span class="feature-value">Enterprise-wide, scalable visualization and analytics platform</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">Advanced vessel/cardiac analysis, auto-segmentation, batch-processing</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Reported Impact:</span>
+                                    <span class="feature-value">User-friendly interface, efficiency in high-quality 3D renderings</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-cards">
+                        <div class="summary-card">
+                            <h3><i class="fas fa-balance-scale"></i> Strategic Divergence</h3>
+                            <p>GE and Philips (SaaS) are selling managed services and outcomes, while Siemens (in therapy) and Canon are selling high-performance, specialized tools that become core hospital infrastructure.</p>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <h3><i class="fas fa-robot"></i> AI Approach Comparison</h3>
+                            <p>GE: AI Orchestrator with user-defined prioritization. Philips: AI Integrator embedding partner/proprietary AI. Siemens: Implicit AI for real-time optimization. Canon: Workflow automation for repetitive tasks.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Clinical Applications Tab Content -->
+                <div id="clinical" class="tab-content">
+                    <h2>Clinical Applications by Domain</h2>
+                    <p class="subtitle">Comparison of platform capabilities across clinical specialties</p>
+                    
+                    <div class="table-container">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Clinical Domain</th>
+                                    <th>GE HealthCare</th>
+                                    <th>Philips</th>
+                                    <th>Siemens Healthineers</th>
+                                    <th>Canon Medical</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Cardiac Imaging</strong></td>
+                                    <td>Workflow Orchestrator: Fast access for reading; integrates 3rd-party AI</td>
+                                    <td>Specialized Powerhouse: Integrated Cardiovascular Suite for unified CT/MR analysis</td>
+                                    <td>Hardware-Synergized Applications: AI apps like Coronary Cockpit with photon-counting CT</td>
+                                    <td class="highlight">Reliable 3D Lab: Strong in cardiac CT analysis, TAVR planning</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Oncology</strong></td>
+                                    <td>Central Review Hub: AI prioritizes follow-ups; connects to advanced tools</td>
+                                    <td>Quantitative Management Suite: Multi-modality tumor segmentation, longitudinal tracking</td>
+                                    <td>Application-Driven Workflow: Guided lesion management, RECIST reporting</td>
+                                    <td>Versatile Analysis Toolkit: Strong lesion management, VIP fusion for liver/prostate</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Neuroimaging</strong></td>
+                                    <td>Rapid Triage Hub: AI flags critical findings (stroke, ICH)</td>
+                                    <td>Quantitative Follow-up Platform: Longitudinal analysis with automated co-registration</td>
+                                    <td>Comprehensive AI-Assist: Automated stroke workflows to detailed tumor analysis</td>
+                                    <td>Diagnostic & Surgical 3D Lab: Robust tools for stroke perfusion, brain volumetry</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Musculoskeletal</strong></td>
+                                    <td>Efficiency Integrator: AI aids fracture detection; gateway to advanced 3D applications</td>
+                                    <td>Quantitative MSK Lab: AI automation for cartilage analysis, body composition, spinal measurements</td>
+                                    <td>Targeted AI Assistance: Automates vertebral fracture detection and body composition analysis</td>
+                                    <td class="highlight">High-Fidelity 3D Visualization Hub: Excels in 3D bone models, orthopedic alignment</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Thoracic/Chest</strong></td>
+                                    <td>Workflow Coordinator & Triage: AI prioritizes nodules, PE; hub for tracking</td>
+                                    <td>Quantitative Disease Manager: AI for nodule management, COPD/emphysema quantification</td>
+                                    <td>Integrated AI Detection: "Companion" AI apps for automated nodule detection and PE identification</td>
+                                    <td>Comprehensive Diagnostic Toolkit: Strong in lung nodule assessment, volumetric analysis</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Abdominal & Pelvic</strong></td>
+                                    <td>Central Workflow Hub: Efficient review of multi-phasic studies; integrates AI apps</td>
+                                    <td>Quantitative Organ Suite: Liver Analysis Suite with AI; DynaCAD integrates prostate AI</td>
+                                    <td>Structured Workflow Applications: Guided tools for liver, prostate, and renal mass characterization</td>
+                                    <td class="highlight">Specialized Organ Analysis: Recognized for multi-phasic liver lesion analysis (VIP)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Vascular (Non-Cardiac)</strong></td>
+                                    <td>Integration Point: Viewer for aortic/runoff CTA; connects to advanced apps</td>
+                                    <td>Dedicated Vascular Suite: Comprehensive, automated tools for aortic aneurysm analysis</td>
+                                    <td>Application-Based Analysis: Specialized workflows for aortic, peripheral, and carotid vessel analysis</td>
+                                    <td>Robust Vessel Analysis: Strong in automatic centerline extraction, 3D modeling for aortic/peripheral planning</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pediatric Imaging</strong></td>
+                                    <td>Access Enabler: Cloud-native design supports remote expertise; age-appropriate protocols</td>
+                                    <td>Protocol & Tool Adaptor: Configurable for pediatric-specific protocols and low-dose imaging</td>
+                                    <td>System-Wide Dose Champion: Vendor-wide dose management and AI reconstruction for low-dose protocols</td>
+                                    <td>Anatomy Adaptor: Supports pediatric-sized models for segmentation; efficient processing</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Breast Imaging</strong></td>
+                                    <td>Enterprise Prior Viewer: Can act as enterprise viewer for priors alongside dedicated systems</td>
+                                    <td>Oncology Workflow Extension: Oncology Suite tools applied to breast MRI for lesion analysis</td>
+                                    <td>Dedicated System Innovation: ClearCEM software for Mammomat B.brilliant system</td>
+                                    <td>Specialized Platform: Breast imaging handled by dedicated Vantage Titan platform</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Point-of-Care & Emergency</strong></td>
+                                    <td>AI Triage Commander: Cloud-based AI prioritization for speeding up radiology response</td>
+                                    <td>Cloud Access Provider: SaaS option delivers advanced visualization tools to ER/ICU</td>
+                                    <td>Multi-Pronged Approach: Combines AI detection apps with Optiq AI for emergency interventions</td>
+                                    <td>Rapid Processing Enabler: VDI deployment and efficient processing of large trauma CTs</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Clinical Detail Tab Content -->
+                <div id="clinical-detail" class="tab-content">
+                    <h2>Detailed Clinical Task Comparisons</h2>
+                    <p class="subtitle">In-depth comparison of specific clinical tasks across vendors</p>
+                    
+                    <div class="clinical-detail-selector">
+                        <select class="detail-select" id="clinicalDetailSelect">
+                            <option value="cardiac">Cardiac Imaging</option>
+                            <option value="oncology">Oncology</option>
+                            <option value="neuro">Neuroimaging</option>
+                            <option value="msk">Musculoskeletal</option>
+                            <option value="thoracic">Thoracic/Chest Imaging</option>
+                            <option value="abdominal">Abdominal & Pelvic Imaging</option>
+                            <option value="vascular">Vascular Imaging</option>
+                            <option value="pediatric">Pediatric Imaging</option>
+                            <option value="breast">Breast Imaging</option>
+                            <option value="point-of-care">Point-of-Care & Emergency</option>
+                        </select>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="comparison-table" id="clinicalDetailTable">
+                            <thead>
+                                <tr>
+                                    <th>Clinical Task</th>
+                                    <th>GE HealthCare</th>
+                                    <th>Philips</th>
+                                    <th>Siemens Healthineers</th>
+                                    <th>Canon Medical</th>
+                                </tr>
+                            </thead>
+                            <tbody id="clinicalDetailBody">
+                                <!-- Cardiac Imaging by default -->
+                                <tr>
+                                    <td><strong>Coronary CTA Analysis</strong></td>
+                                    <td>Integrated viewer for reading; connects to 3rd-party AI apps for plaque analysis, stenosis measurement, and FFRct</td>
+                                    <td>Cardiovascular Suite: Unified environment for cardiac CT and MR with coronary plaque characterization and stenosis quantification</td>
+                                    <td>Syngo.CT Coronary Cockpit: AI-powered application for automated plaque analysis, labeling, and PCI planning</td>
+                                    <td>Vessel Analysis: Strong capabilities for auto-segmentation of coronary arteries, lumen/wall analysis, plaque assessment</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Structural Heart / TAVR Planning</strong></td>
+                                    <td>Advanced visualization tools for annulus measurement, valve sizing, and access angle planning</td>
+                                    <td>Integrated tools within Cardiovascular Suite for multi-modality planning (CT, MR, Echo); supports 3D printing preparation</td>
+                                    <td>Specialized applications on syngo.via for pre-procedural planning of TAVR, TMVR, and LAAC</td>
+                                    <td>Cardiac CT Analysis: Comprehensive modules for aortic valve/root measurement, TAVR planning, and LAAO assessment</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Cardiac MR Function</strong></td>
+                                    <td>Enables viewing of cine loops and post-processed maps; relies on integrated 3rd-party or AW applications for quantification</td>
+                                    <td>MR Cardiac Suite: AI-powered auto-segmentation for ventricle volumes, ejection fraction, and strain analysis; supports tissue characterization</td>
+                                    <td>Applications like syngo.via FRONTIER offer automated cardiac MR analysis for function, perfusion, and scar quantification</td>
+                                    <td>Provides tools for myocardial function analysis, including contour detection for LV/RV volumes and wall motion/thickening analysis</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Technical Architecture Tab Content -->
+                <div id="technical" class="tab-content">
+                    <h2>Technical Architecture & Integration</h2>
+                    <p class="subtitle">Comparison of AI deployment, cloud security, interoperability, and infrastructure</p>
+                    
+                    <div class="sub-tab-buttons">
+                        <button class="sub-tab-btn active" data-subtab="ai-integration">AI Integration</button>
+                        <button class="sub-tab-btn" data-subtab="security">Security & Governance</button>
+                        <button class="sub-tab-btn" data-subtab="interoperability">Interoperability</button>
+                        <button class="sub-tab-btn" data-subtab="hardware">Hardware Infrastructure</button>
+                        <button class="sub-tab-btn" data-subtab="ai-breakdown">AI Feature Breakdown</button>
+                    </div>
+                    
+                    <!-- AI Integration Sub-tab -->
+                    <div id="ai-integration" class="sub-tab-content active">
+                        <h3>AI Model Deployment & Integration</h3>
+                        <div class="table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>GE HealthCare (Genesis)</th>
+                                        <th>Philips (AVW 16)</th>
+                                        <th>Siemens Healthineers</th>
+                                        <th>Canon Medical (Vitrea)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Integration Pattern</strong></td>
+                                        <td>Orchestrated Microservices (API-Driven)</td>
+                                        <td>Hybrid: Suite-Embedded & Partner API</td>
+                                        <td>1. Firmware-Embedded (Optiq AI)<br>2. Application-Integrated</td>
+                                        <td>Algorithm Library & Selective API</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Technical Interface</strong></td>
+                                        <td>Standardized RESTful APIs following IHE AI Workflow (AIW)</td>
+                                        <td>Internal SDK/APIs for proprietary AI; External APIs for partners</td>
+                                        <td>1. Proprietary Hardware Bus & Low-Level SDK<br>2. Internal plugin APIs within syngo.via</td>
+                                        <td>Primarily internal, compiled libraries; proprietary APIs for specific connections</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Deployment Model</strong></td>
+                                        <td>Cloud-Native Containers (Docker/K8s)</td>
+                                        <td>Dual-Model: Proprietary AI runs on-prem or in Philips HealthSuite; Partner AI can be hosted separately</td>
+                                        <td>1. Embedded on Device (imaging system hardware)<br>2. On-Prem Server/Cloud for diagnostic AI apps</td>
+                                        <td>On-Prem Server Deployment; AI/ML features part of core application</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Data Exchange Format</strong></td>
+                                        <td>DICOM GSPS & SR for annotations; Pixel data via DICOMweb</td>
+                                        <td>DICOM GSPS, SR, and proprietary structured data; DICOMweb for image retrieval</td>
+                                        <td>1. Raw/Processed Pixel Data Stream (Optiq AI)<br>2. DICOM SR & GSPS integrated into application</td>
+                                        <td>Primarily proprietary project files and DICOM GSPS; results rendered into image output</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Advantage</strong></td>
+                                        <td>Vendor-agnostic flexibility; plug-and-play best-of-breed AI from any vendor</td>
+                                        <td>Balanced control & depth; high performance for core tasks while expanding via partners</td>
+                                        <td>1. Unmatched latency & reliability for real-time therapy<br>2. Seamless UX as native feature</td>
+                                        <td>Predictable performance & stability; tight coupling ensures optimization</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Potential Drawback</strong></td>
+                                        <td>Integration overhead & variability; each new AI vendor requires integration work</td>
+                                        <td>Ecosystem governance; managing multiple partnerships and update cycles can be complex</td>
+                                        <td>1. Vendor lock-in & closed system<br>2. Slower adoption of third-party AI innovations</td>
+                                        <td>Limited agility; adding new AI requires full software update from Canon</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Security Sub-tab -->
+                    <div id="security" class="sub-tab-content">
+                        <h3>Cloud Security & Data Governance</h3>
+                        <div class="table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>GE HealthCare (Genesis)</th>
+                                        <th>Philips (AVW 16 - SaaS)</th>
+                                        <th>Siemens Healthineers (ActExcell)</th>
+                                        <th>Canon Medical (Vitrea - VDI)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Data Residency & Sovereignty</strong></td>
+                                        <td>Regional cloud deployments (US, EU) to keep data within geographic boundaries for GDPR compliance</td>
+                                        <td>AWS Global Infrastructure with options for customer-designated AWS Regions; Philips acts as data processor</td>
+                                        <td>Data transfer to Siemens-managed data centers or cloud; regional compliance as contract detail</td>
+                                        <td>Data stays on-premise; VDI model transmits only encrypted screen pixels, not PHI</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>In-Transit Encryption</strong></td>
+                                        <td>TLS 1.2+ for all communications; DICOMweb over HTTPS</td>
+                                        <td>TLS 1.2+ for all data movement to/from AWS cloud</td>
+                                        <td>TLS 1.2+ for data ingestion and portal access</td>
+                                        <td>Encrypted VDI protocols securing pixel stream from server to client</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>At-Rest Encryption</strong></td>
+                                        <td>AES-256 encryption for data at rest; customer-managed encryption keys as option</td>
+                                        <td>AES-256 encryption on AWS services; key management via AWS KMS with potential customer control</td>
+                                        <td>AES-256 encryption at rest; encryption key ownership as critical contractual point</td>
+                                        <td>Full disk encryption on physical Vitrea servers within hospital data center, managed by hospital IT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Access Control & Identity</strong></td>
+                                        <td>Integration with Hospital Identity Providers via SAML 2.0/OIDC for SSO; fine-grained RBAC</td>
+                                        <td>SSO integration and RBAC; Philips HealthSuite provides centralized identity and access management</td>
+                                        <td>Role-based access to ActExcell portal, integrated with enterprise directories</td>
+                                        <td>Tied to hospital Active Directory/LDAP via VDI environment; internal user management</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Audit & Compliance</strong></td>
+                                        <td>Comprehensive audit logs of all data access and user actions; supports HIPAA requirements</td>
+                                        <td>AWS CloudTrail for API logging and GuardDuty for threat detection; HIPAA, GDPR compliance documentation</td>
+                                        <td>Audit trails of data access and model simulations; compliance with ISO 27001 and HIPAA expected</td>
+                                        <td>Audit trails by Vitrea application and hospital's VDI/network logs; compliance burden with hospital IT</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Security Posture</strong></td>
+                                        <td>Enterprise-Grade, Shared Responsibility Model; GE provides secure cloud platform</td>
+                                        <td>Cloud-Native, AWS-Backed Security; leverages AWS security with Philips managing the cloud</td>
+                                        <td>Trusted Vendor, Data Processor Model; relies on Siemens' reputation and infrastructure security</td>
+                                        <td>On-Premise Control; maximizes hospital IT's direct control over data and access</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Interoperability Sub-tab -->
+                    <div id="interoperability" class="sub-tab-content">
+                        <h3>Interoperability Standards</h3>
+                        <div class="table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>GE HealthCare (Genesis)</th>
+                                        <th>Philips (AVW 16)</th>
+                                        <th>Siemens Healthineers</th>
+                                        <th>Canon Medical (Vitrea)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Primary Image/Data Access</strong></td>
+                                        <td>DICOMweb RESTful API (WADO-RS, QIDO-RS, STOW-RS) for cloud-native image retrieval and storage</td>
+                                        <td>DICOMweb and traditional DICOM C-STORE/C-FIND for compatibility with all PACS</td>
+                                        <td>DICOMweb and DICOM for broad PACS interoperability; proprietary protocols for internal speed</td>
+                                        <td>Primarily DICOM C-STORE/C-FIND/C-MOVE (DIMSE); strong support for universal DICOM network standard</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>EHR/Workflow Integration</strong></td>
+                                        <td>FHIRcast as core standard for real-time context sharing; updates viewer when clinician selects patient in EHR</td>
+                                        <td>Supports FHIR and HL7 v2 for data exchange; workflow integration via deep PACS integration or custom interfaces</td>
+                                        <td>Utilizes HL7 v2 for order/results and IHE Profiles for workflow; FHIR adoption growing in newer applications</td>
+                                        <td>HL7 v2 for order and result messaging; integration through hospital's PACS or VNA, not directly with EHR</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>AI Result Embedding</strong></td>
+                                        <td>DICOM Structured Reports (SR) & Grayscale Softcopy Presentation State (GSPS); allows radiologist to modify AI findings</td>
+                                        <td>DICOM SR & GSPS; emphasizes rich, quantitative SR templates that populate reports</td>
+                                        <td>DICOM SR & GSPS for diagnostic AI; Optiq AI results are directly rendered pixels</td>
+                                        <td>DICOM GSPS for annotations; 3D results saved as secondary capture images or proprietary project files</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Interoperability Philosophy</strong></td>
+                                        <td>"Future-Proof" Open Standards: Betting heavily on FHIR and DICOMweb as next-generation standards</td>
+                                        <td>Pragmatic Hybrid: Supports modern APIs while maintaining flawless operation in dominant DICOM/HL7 v2 environments</td>
+                                        <td>Comprehensive IHE Profile Implementation: Excels in using IHE profiles for reliable system-to-system integration</td>
+                                        <td>DICOM Foundation, Proven Reliability: Emphasis on established, reliable DICOM standards</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Hardware Infrastructure Sub-tab -->
+                    <div id="hardware" class="sub-tab-content">
+                        <h3>Compute Hardware Requirements</h3>
+                        <div class="table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>GE HealthCare (Genesis)</th>
+                                        <th>Philips (AVW 16)</th>
+                                        <th>Siemens Healthineers</th>
+                                        <th>Canon Medical (Vitrea)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Primary Compute Location</strong></td>
+                                        <td>Public Cloud (AWS, Azure, Google Cloud) or Private Cloud; GE manages infrastructure</td>
+                                        <td>1. On-Premise Server<br>2. Cloud (AWS) for SaaS model</td>
+                                        <td>1. Embedded in Imaging Device (Optiq AI)<br>2. On-Premise Server/Data Center (Diagnostic AI, ActExcell)</td>
+                                        <td>On-Premise Data Center; dedicated, vendor-qualified server hardware installed in hospital</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Hardware Components</strong></td>
+                                        <td>Cloud Provider GPUs/CPUs: Scalable, high-end GPU instances (NVIDIA A100/T4 on AWS EC2)</td>
+                                        <td>On-Prem: Dedicated servers with high-core-count CPUs, NVIDIA GPUs (RTX A6000/A100), vast RAM<br>Cloud: Equivalent AWS instances</td>
+                                        <td>Optiq AI: Custom hardware with integrated NVIDIA GPUs on Artis system's internal bus<br>ActExcell: Likely runs on Siemens' high-performance computing clusters</td>
+                                        <td>Qualified Server Platform: Rack-mounted server with dual high-end CPUs, multiple professional-grade GPUs, high-speed SSD arrays, 10/25/40 GbE networking</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Client/User Device Requirements</strong></td>
+                                        <td>Minimal: Any modern web browser on standard PC, Mac, or tablet with internet connection</td>
+                                        <td>On-Prem: Standard PC workstation; heavy lifting server-side<br>SaaS: Capable device with good browser and network</td>
+                                        <td>For Diagnostic Apps: Standard syngo.via workstation<br>For Optiq AI: No separate client; AI runs on system's native displays</td>
+                                        <td>Thin Client or VDI Endpoint: Standard PC or zero-client accessing virtual desktop, or dedicated Vitrea client workstation</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Scalability Model</strong></td>
+                                        <td>Elastic Cloud Scaling: Automatically spins up/down compute and storage based on demand; pay for what is used</td>
+                                        <td>On-Prem: Vertical Scaling - add more GPUs/CPU/RAM to server; may scale to cluster<br>Cloud: Elastic, similar to GE's model</td>
+                                        <td>Optiq AI: Fixed - capability defined by purchased system<br>ActExcell: Service-Based - Siemens scales backend compute as part of service</td>
+                                        <td>Scale-Up & Cluster: Start with one server, scale up components, or add additional processing servers in cluster</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Infrastructure Management</strong></td>
+                                        <td>Fully Managed by GE as part of SaaS subscription: patching, upgrades, security, scaling</td>
+                                        <td>On-Prem: Customer-Managed - hospital IT responsible for server<br>SaaS: Philips-Managed on AWS</td>
+                                        <td>Optiq AI: Siemens-managed as part of system<br>ActExcell & Software: Mixed - Siemens manages analytics backend; customer may manage on-prem syngo.via servers</td>
+                                        <td>Customer-Managed: Hospital IT owns procurement, installation, maintenance, lifecycle of entire Vitrea hardware/software stack</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Key Infrastructure Advantage</strong></td>
+                                        <td>Zero Infrastructure Burden: Eliminates capital cost, IT staffing for maintenance, hardware obsolescence concerns</td>
+                                        <td>Deployment Choice: Ultimate flexibility for customers with different IT strategies and data governance needs</td>
+                                        <td>Purpose-Built, Deterministic Performance: Dedicated, low-latency hardware is non-negotiable for therapy safety and efficacy</td>
+                                        <td>Performance Predictability & Control: Dedicated, optimized hardware ensures consistent, fast performance for high-volume 3D processing</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- AI Feature Breakdown Sub-tab -->
+                    <div id="ai-breakdown" class="sub-tab-content">
+                        <h3>Detailed AI Feature Breakdown</h3>
+                        <div class="table-container">
+                            <table class="ai-breakdown-table">
+                                <thead>
+                                    <tr>
+                                        <th>AI Feature (Company)</th>
+                                        <th>Stage in Workflow</th>
+                                        <th>How It Works</th>
+                                        <th>Direct Benefit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Smart Patient Setup (GE)</strong></td>
+                                        <td>Pre-Scan / Planning</td>
+                                        <td>Uses live camera feed for AI-assisted, real-time patient positioning</td>
+                                        <td>Reduces setup time and errors, improves consistency</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Contactless Gating (GE)</strong></td>
+                                        <td>During Scan</td>
+                                        <td>Synchronizes scanner to patient's breathing motion without contact</td>
+                                        <td>Enables clearer images without patient breath-hold cooperation</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>One-Click Cardiac Planning (Philips)</strong></td>
+                                        <td>Pre-Scan / Planning</td>
+                                        <td>Fully automates setup of multiple, complex cardiac MRI views</td>
+                                        <td>Cuts planning time from minutes to seconds, reduces technologist variability</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Non-Breath-Hold Imaging (Philips)</strong></td>
+                                        <td>During Scan</td>
+                                        <td>AI correction enables diagnostic-quality images without requiring breath-holds</td>
+                                        <td>Makes scanning feasible for frail, pediatric, or uncooperative patients</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Single-Heartbeat Acquisition (Philips)</strong></td>
+                                        <td>During Scan</td>
+                                        <td>Captures complete cardiac data within one heartbeat</td>
+                                        <td>Enables scanning of patients with arrhythmias (irregular heartbeats)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Real-Time Noise Reduction (Siemens)</strong></td>
+                                        <td>During Procedure / Image Processing</td>
+                                        <td>AI algorithms clean up image noise during live fluoroscopy/angiography</td>
+                                        <td>Provides clearer visuals for precise device placement at lower radiation doses</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Automatic Exposure Control (Siemens)</strong></td>
+                                        <td>During Procedure</td>
+                                        <td>AI dynamically adjusts all imaging parameters in real-time</td>
+                                        <td>Maintains consistent image quality while keeping dose "as low as reasonably achievable"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="key-takeaway" style="margin-top: 30px;">
+                            <h4><i class="fas fa-robot"></i> Clinical vs. Operational AI Distinction</h4>
+                            <p><strong>Clinical/Procedural AI</strong> (GE, Philips, Siemens): Focuses on improving diagnostic imaging and procedural outcomes (image quality, setup time, patient comfort).</p>
+                            <p><strong>Operational AI</strong> (Siemens ActExcell): Uses hospital data to simulate and recommend improvements for department management (reducing wait times, optimizing resources).</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Magnet Technology Tab Content -->
+                <div id="magnet" class="tab-content">
+                    <h2>Magnet Technology Comparison</h2>
+                    <p class="subtitle">Comparison of next-generation MRI magnet technologies from Philips and Siemens</p>
+                    
+                    <div class="magnet-comparison">
+                        <div class="magnet-card philips">
+                            <div class="magnet-header">
+                                <div class="magnet-name">Philips BlueSeal Horizon</div>
+                                <div class="magnet-strength">3.0 Tesla</div>
+                            </div>
+                            <div class="platform-name">Helium-free high-field MRI system</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">Helium-free operation at high field strength</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Primary Application:</span>
+                                    <span class="feature-value">Premium diagnostic imaging for neurology, musculoskeletal, and vascular studies</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Key Technology Driver:</span>
+                                    <span class="feature-value">Eliminating operational dependency on liquid helium in advanced systems</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Design Focus:</span>
+                                    <span class="feature-value">Maximizing image quality and workflow efficiency in traditional high-field diagnostic setting</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">AI Focus:</span>
+                                    <span class="feature-value">Workflow acceleration & diagnostic precision at point of care</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Key AI Features:</span>
+                                    <span class="feature-value">SmartPlanning, Real-time Scan Preview (with NVIDIA), SmartSpeed Precise, SmartReading</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Primary Goal:</span>
+                                    <span class="feature-value">Simplify and speed up entire imaging chain from patient setup to diagnosis for complex cases</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Facility Impact:</span>
+                                    <span class="feature-value">Reduces siting complexity (no helium, no vent pipes), lowers long-term operational risk and cost</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Patient & Procedure Impact:</span>
+                                    <span class="feature-value">Aims for faster, sharper diagnostic scans</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Commercial Status:</span>
+                                    <span class="feature-value">"Work in Progress"; not for sale; future availability not guaranteed</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="magnet-card siemens">
+                            <div class="magnet-header">
+                                <div class="magnet-name">Siemens Magnetom Free.XL</div>
+                                <div class="magnet-strength">0.55 Tesla</div>
+                            </div>
+                            <div class="platform-name">Helium-free interventional MRI system</div>
+                            <ul class="feature-list">
+                                <li class="feature-item">
+                                    <span class="feature-label">Core Innovation:</span>
+                                    <span class="feature-value">Helium-free design for enhanced interventional use</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Primary Application:</span>
+                                    <span class="feature-value">Interventional & diagnostic hybrid, enabling real-time MRI-guided procedures and routine scans</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Key Technology Driver:</span>
+                                    <span class="feature-value">Enabling open, accessible workflows for needle-based therapies and surgery</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Design Focus:</span>
+                                    <span class="feature-value">Balancing good image quality with procedural access, patient comfort, and intraoperative workflow</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">AI Focus:</span>
+                                    <span class="feature-value">Image reconstruction & procedural guidance in interventional setting</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Key AI Features:</span>
+                                    <span class="feature-value">Deep Resolve AI reconstruction, myNeedle Companion for 3D path planning and navigation</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Primary Goal:</span>
+                                    <span class="feature-value">Enable high-quality imaging and precise navigation at lower field strengths for therapy</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Facility Impact:</span>
+                                    <span class="feature-value">Designed for integration into interventional suites and hybrid ORs, with dockable tables for patient transfer</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Patient & Procedure Impact:</span>
+                                    <span class="feature-value">Enables new minimally invasive, MRI-guided therapeutic procedures with real-time imaging</span>
+                                </li>
+                                <li class="feature-item">
+                                    <span class="feature-label">Commercial Status:</span>
+                                    <span class="feature-value">"Work-in-progress" system; developed in collaboration with Cook Medical</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-takeaway" style="margin-top: 30px;">
+                        <h4><i class="fas fa-exchange-alt"></i> Key Comparison</h4>
+                        <p><strong>Philips BlueSeal Horizon (3.0T)</strong>: Focuses on eliminating helium dependency while maintaining premium diagnostic image quality for traditional high-field applications.</p>
+                        <p><strong>Siemens Magnetom Free.XL (0.55T)</strong>: Prioritizes interventional capabilities with lower field strength, enabling real-time MRI-guided procedures with enhanced patient and clinician access.</p>
+                    </div>
+                </div>
+                
+                <!-- Economic Models Tab Content -->
+                <div id="economic" class="tab-content">
+                    <h2>Economic Models: Capex vs Opex</h2>
+                    <p class="subtitle">Comparison of licensing models, cost drivers, and value realization strategies</p>
+                    
+                    <div class="economic-model">
+                        <h3>Licensing Models Comparison</h3>
+                        <div class="model-comparison">
+                            <div class="model-card ge">
+                                <div class="model-name">GE HealthCare</div>
+                                <div class="model-type">Subscription (SaaS) - Opex</div>
+                                <p>Priced per user, per month/year. Includes software, cloud hosting, updates, and support. Aligns cost directly with usage.</p>
+                            </div>
+                            
+                            <div class="model-card philips">
+                                <div class="model-name">Philips</div>
+                                <div class="model-type">Dual Model: Perpetual & Subscription</div>
+                                <p><strong>Perpetual (Capex):</strong> One-time fee + annual maintenance.<br>
+                                <strong>SaaS (Opex):</strong> Subscription on HealthSuite (likely per study or user).</p>
+                            </div>
+                            
+                            <div class="model-card siemens">
+                                <div class="model-name">Siemens Healthineers</div>
+                                <div class="model-type">Mixed Portfolio</div>
+                                <p><strong>Software Licenses:</strong> Perpetual or term for syngo.via apps.<br>
+                                <strong>Operational Service:</strong> ActExcell as consultative analytics service (annual fee).<br>
+                                <strong>Optiq AI:</strong> Bundled/feature-upgrade on high-end interventional systems.</p>
+                            </div>
+                            
+                            <div class="model-card canon">
+                                <div class="model-name">Canon Medical</div>
+                                <div class="model-type">Primarily Perpetual (Capex)</div>
+                                <p>One-time server/client license purchase + annual software maintenance/support fee (~20% of license cost).</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="economic-model">
+                        <h3>Cost Drivers & Value Proposition</h3>
+                        <div class="table-container">
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Component</th>
+                                        <th>GE HealthCare (Genesis)</th>
+                                        <th>Philips (AVW 16)</th>
+                                        <th>Siemens Healthineers</th>
+                                        <th>Canon Medical (Vitrea)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Cost Drivers & Metrics</strong></td>
+                                        <td>
+                                            - Active User Count<br>
+                                            - Storage Volume<br>
+                                            - Level of AI/AW services used<br>
+                                            - Support SLA
+                                        </td>
+                                        <td>
+                                            <strong>Perpetual:</strong> Server power, user seats, clinical suites<br>
+                                            <strong>SaaS:</strong> Study volume, user seats, compute hours for advanced processing
+                                        </td>
+                                        <td>
+                                            <strong>ActExcell:</strong> Scale/complexity of department, depth of analysis<br>
+                                            <strong>Software:</strong> Application modules, number of processing nodes/seats
+                                        </td>
+                                        <td>
+                                            - Server hardware specs (CPU/GPU cores, RAM)<br>
+                                            - Number of concurrent user licenses<br>
+                                            - Advanced application modules (e.g., Cardiac, Vascular)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Value Proposition & ROI</strong></td>
+                                        <td>Predictable Opex, Scalability, Zero IT Overhead. ROI from increased radiologist productivity and reduced turnaround time.</td>
+                                        <td>Choice & Flexibility. Perpetual offers control; SaaS offers lower upfront cost and cloud agility. ROI from specialist efficiency gains (e.g., 44% faster reads).</td>
+                                        <td>
+                                            <strong>ActExcell:</strong> ROI from operational improvements (reduced wait times, optimized staffing)<br>
+                                            <strong>Optiq AI:</strong> ROI from enabling complex, higher-margin procedures with better outcomes/safety
+                                        </td>
+                                        <td>High-Performance at Fixed Cost. High upfront cost but predictable long-term ownership. ROI from high-volume, reliable 3D service supporting surgical programs.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Potential Financial Drawbacks</strong></td>
+                                        <td>Long-term cost may exceed perpetual license if used heavily for many years. Vendor lock-in to GE's cloud ecosystem.</td>
+                                        <td><strong>SaaS:</strong> Can become expensive at very high volumes.<br>
+                                            <strong>Perpetual:</strong> Large upfront Capex, responsibility for on-prem hardware refresh.</td>
+                                        <td><strong>ActExcell:</strong> Requires high-quality input data; ROI depends on implementing recommendations.<br>
+                                            <strong>Software:</strong> Can be expensive to license across large enterprise.</td>
+                                        <td>Large Upfront Capital Outlay. Requires significant hospital IT resources for deployment, maintenance, and hardware lifecycle management.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="key-takeaway" style="margin-top: 30px;">
+                        <h4><i class="fas fa-chart-line"></i> Industry Trend Analysis</h4>
+                        <p>The industry is shifting from capital expenditure (Capex) models to operational expenditure (Opex) subscription models. GE and Philips lead this shift with cloud-native SaaS offerings, while Siemens offers a hybrid approach and Canon remains primarily in the traditional perpetual licensing space. This creates both opportunity and risk for Canon as healthcare systems increasingly seek flexible, scalable consumption models.</p>
+                    </div>
+                </div>
+                
+                <!-- Strategic Focus Tab Content -->
+                <div id="strategic" class="tab-content">
+                    <h2>Strategic Focus Areas for Canon Medical</h2>
+                    <p class="subtitle">Key areas requiring attention based on competitive analysis</p>
+                    
+                    <div class="focus-areas">
+                        <div class="focus-card">
+                            <h4>1. AI Integration Strategy</h4>
+                            <p>Develop a clear, open ecosystem strategy for third-party AI. Move beyond internal algorithms to include a marketplace or standardized API framework (e.g., IHE AI Workflow) for integrating best-in-class AI from partners.</p>
+                            <p><strong>Rationale:</strong> GE & Philips are aggressively pursuing open and partnered AI models, making their platforms hubs for innovation. Canon's reliance on proprietary algorithms risks appearing closed and may slow adoption of cutting-edge AI tools.</p>
+                        </div>
+                        
+                        <div class="focus-card">
+                            <h4>2. Cloud-Native & SaaS Offering</h4>
+                            <p>Accelerate development of a true, cloud-native "Vitrea as a Service" offering. This requires re-architecting the core server-based platform for containerized microservices on public cloud infrastructure (AWS/Azure).</p>
+                            <p><strong>Rationale:</strong> The industry shift to Opex and "anywhere access" is led by GE's Genesis and Philips HealthSuite. Canon's on-premise/VDI model is a barrier for health systems seeking to reduce IT burden and enable remote work at scale.</p>
+                        </div>
+                        
+                        <div class="focus-card">
+                            <h4>3. Flexible Consumption Models</h4>
+                            <p>Introduce and aggressively market flexible subscription pricing (per-study, per-user, per-module) alongside traditional perpetual licenses to compete with cloud-native SaaS offerings.</p>
+                            <p><strong>Rationale:</strong> GE and Philips' SaaS models lower entry barriers and align cost with value. Canon's large upfront Capex is a significant hurdle, especially for smaller institutions or for trying new applications.</p>
+                        </div>
+                        
+                        <div class="focus-card">
+                            <h4>4. Modern API & Interoperability</h4>
+                            <p>Invest heavily in modern interoperability standards. Prioritize full DICOMweb and FHIR implementation for cloud-ready data exchange and FHIRcast for real-time EHR contextual integration.</p>
+                            <p><strong>Rationale:</strong> GE is built on these standards. Reliance on traditional DICOM DIMSE and HL7v2 limits seamless integration in modern, cloud-based health IT ecosystems and makes partnerships harder.</p>
+                        </div>
+                        
+                        <div class="focus-card">
+                            <h4>5. Operational Intelligence</h4>
+                            <p>Create or partner to develop a data-driven operational module. This tool should analyze imaging department workflow data to provide insights into bottlenecks, utilization, and predictive scheduling, similar to Siemens' ActExcell.</p>
+                            <p><strong>Rationale:</strong> Siemens has defined a new category with ActExcell. Providing efficiency tools is now a competitive differentiator beyond clinical features, addressing C-suite priorities for throughput and ROI.</p>
+                        </div>
+                        
+                        <div class="focus-card">
+                            <h4>6. Therapeutic Pathway Integration</h4>
+                            <p>Strengthen tools and partnerships for image-guided therapy. Enhance 3D planning outputs (e.g., for TAVR, tumor ablation) with formats or protocols that seamlessly feed into interventional systems, including navigation platforms.</p>
+                            <p><strong>Rationale:</strong> Siemens' Optiq AI exemplifies the tight integration of diagnosis and therapy. Canon's excellent 3D models must be made more actionable in the procedural suite to stay relevant in value-based care pathways.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-cards" style="margin-top: 30px;">
+                        <div class="summary-card">
+                            <h3><i class="fas fa-check-circle"></i> Canon's Current Strengths</h3>
+                            <ul style="padding-left: 20px; margin-top: 10px;">
+                                <li>High-fidelity 3D processing and rendering</li>
+                                <li>Reliable on-premise performance and stability</li>
+                                <li>Strong cardiac and vascular analysis capabilities</li>
+                                <li>User-friendly interface for complex 3D workflows</li>
+                                <li>Proven track record in high-volume 3D lab environments</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="summary-card">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Strategic Gaps</h3>
+                            <ul style="padding-left: 20px; margin-top: 10px;">
+                                <li>Cloud-native architecture and SaaS delivery</li>
+                                <li>Open AI ecosystem and third-party integration</li>
+                                <li>Modern interoperability standards (DICOMweb, FHIR)</li>
+                                <li>Flexible consumption models (Opex vs Capex)</li>
+                                <li>Operational intelligence and analytics</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="key-takeaway" style="margin-top: 30px;">
+                        <h4><i class="fas fa-exclamation-triangle"></i> Strategic Summary</h4>
+                        <p>Canon's immediate strengths are in high-fidelity 3D processing and reliable on-premise performance. Its primary strategic gaps are in cloud-native architecture, open AI ecosystem strategy, and flexible business models. To maintain and grow its market position, Canon must evolve from being a superb point solution for 3D labs to becoming an integrated platform player in the diagnostic and therapeutic workflow.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>RSNA 2025 Competitive Analysis Dashboard | Comprehensive comparison of GE HealthCare, Philips, Siemens Healthineers, and Canon Medical</p>
+            <p>This interactive dashboard visualizes the complete competitive landscape across all major dimensions of medical imaging platforms.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Main tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all tabs and content
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Reset sub-tabs to first option when switching main tabs
+                if (tabId === 'technical') {
+                    document.querySelectorAll('.sub-tab-btn').forEach(subBtn => subBtn.classList.remove('active'));
+                    document.querySelectorAll('.sub-tab-content').forEach(subContent => subContent.classList.remove('active'));
+                    document.querySelector('[data-subtab="ai-integration"]').classList.add('active');
+                    document.getElementById('ai-integration').classList.add('active');
+                }
+            });
+        });
+        
+        // Sub-tab switching functionality (for technical tab)
+        document.querySelectorAll('.sub-tab-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all sub-tabs and content
+                document.querySelectorAll('.sub-tab-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.sub-tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked sub-tab and corresponding content
+                button.classList.add('active');
+                const subtabId = button.getAttribute('data-subtab');
+                document.getElementById(subtabId).classList.add('active');
+            });
+        });
+        
+        // Clinical area filtering in sidebar
+        document.querySelectorAll('.clinical-area').forEach(area => {
+            area.addEventListener('click', () => {
+                // Remove active class from all areas
+                document.querySelectorAll('.clinical-area').forEach(a => a.classList.remove('active'));
+                
+                // Add active class to clicked area
+                area.classList.add('active');
+                
+                // Get selected area
+                const selectedArea = area.getAttribute('data-area');
+                
+                // Update the dropdown filter to match
+                document.getElementById('clinicalFilter').value = selectedArea;
+                
+                // If we're on clinical detail tab, update the detailed table
+                if (document.getElementById('clinical-detail').classList.contains('active')) {
+                    updateClinicalDetailTable(selectedArea);
+                }
+            });
+        });
+        
+        // Filter dropdown functionality
+        document.getElementById('clinicalFilter').addEventListener('change', function() {
+            const selectedValue = this.value;
+            
+            // Update the active clinical area in sidebar
+            document.querySelectorAll('.clinical-area').forEach(area => {
+                area.classList.remove('active');
+                if (area.getAttribute('data-area') === selectedValue) {
+                    area.classList.add('active');
+                }
+            });
+            
+            // If we're on clinical detail tab, update the detailed table
+            if (document.getElementById('clinical-detail').classList.contains('active')) {
+                updateClinicalDetailTable(selectedValue);
+            }
+        });
+        
+        // Clinical detail selector functionality
+        document.getElementById('clinicalDetailSelect').addEventListener('change', function() {
+            const selectedValue = this.value;
+            updateClinicalDetailTable(selectedValue);
+        });
+        
+        // Vendor filter functionality
+        document.getElementById('vendorFilter').addEventListener('change', function() {
+            const selectedVendor = this.value;
+            
+            // Highlight vendor cards in overview
+            document.querySelectorAll('.vendor-card').forEach(card => {
+                card.style.opacity = '0.7';
+                card.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.05)';
+            });
+            
+            if (selectedVendor === 'all') {
+                // Reset all cards
+                document.querySelectorAll('.vendor-card').forEach(card => {
+                    card.style.opacity = '1';
+                    card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
+                });
+            } else {
+                // Highlight selected vendor
+                let selectedCard;
+                if (selectedVendor === 'ge') {
+                    selectedCard = document.querySelector('.ge-card');
+                } else if (selectedVendor === 'philips') {
+                    selectedCard = document.querySelector('.philips-card');
+                } else if (selectedVendor === 'siemens') {
+                    selectedCard = document.querySelector('.siemens-card');
+                } else if (selectedVendor === 'canon') {
+                    selectedCard = document.querySelector('.canon-card');
+                }
+                
+                if (selectedCard) {
+                    selectedCard.style.opacity = '1';
+                    selectedCard.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.15)';
+                    selectedCard.style.transform = 'translateY(-8px)';
+                }
+            }
+        });
+        
+        // Clinical detail table data
+        const clinicalDetailData = {
+            'cardiac': [
+                {
+                    task: 'Coronary CTA Analysis',
+                    ge: 'Integrated viewer for reading; connects to 3rd-party AI apps for plaque analysis, stenosis measurement, and FFRct',
+                    philips: 'Cardiovascular Suite: Unified environment for cardiac CT and MR with coronary plaque characterization and stenosis quantification',
+                    siemens: 'Syngo.CT Coronary Cockpit: AI-powered application for automated plaque analysis, labeling, and PCI planning',
+                    canon: 'Vessel Analysis: Strong capabilities for auto-segmentation of coronary arteries, lumen/wall analysis, plaque assessment'
+                },
+                {
+                    task: 'Structural Heart / TAVR Planning',
+                    ge: 'Advanced visualization tools for annulus measurement, valve sizing, and access angle planning',
+                    philips: 'Integrated tools within Cardiovascular Suite for multi-modality planning (CT, MR, Echo); supports 3D printing preparation',
+                    siemens: 'Specialized applications on syngo.via for pre-procedural planning of TAVR, TMVR, and LAAC',
+                    canon: 'Cardiac CT Analysis: Comprehensive modules for aortic valve/root measurement, TAVR planning, and LAAO assessment'
+                },
+                {
+                    task: 'Cardiac MR Function',
+                    ge: 'Enables viewing of cine loops and post-processed maps; relies on integrated 3rd-party or AW applications for quantification',
+                    philips: 'MR Cardiac Suite: AI-powered auto-segmentation for ventricle volumes, ejection fraction, and strain analysis; supports tissue characterization',
+                    siemens: 'Applications like syngo.via FRONTIER offer automated cardiac MR analysis for function, perfusion, and scar quantification',
+                    canon: 'Provides tools for myocardial function analysis, including contour detection for LV/RV volumes and wall motion/thickening analysis'
+                }
+            ],
+            'oncology': [
+                {
+                    task: 'Tumor Segmentation & Tracking',
+                    ge: 'Viewer for RECIST measurements; AI prioritization can flag follow-up studies; integrated AW apps provide volumetric segmentation',
+                    philips: 'Oncology Suite: Advanced multi-modality tumor segmentation (CT, MR, PET); supports longitudinal tracking, volumetric analysis, and tumor burden metrics',
+                    siemens: 'Applications like syngo.via Oncology provide tools for manual, semi-auto, and AI-based lesion segmentation, tracking, and RECIST 1.1/PERCIST reporting',
+                    canon: 'Lesion Management: Features for manual and semi-automatic lesion segmentation, volumetric analysis, and generation of longitudinal trend graphs for tumor growth'
+                },
+                {
+                    task: 'Treatment Response Assessment',
+                    ge: 'Facilitates comparison of current/prior studies; quantitative results from advanced apps can be viewed within the workspace',
+                    philips: 'Integrates quantitative data (CT density, PET SUV) for multi-parametric response assessment; AI tools aid in change detection',
+                    siemens: 'Oncology applications automate the calculation of changes in lesion size, volume, and SUV metrics between studies to standardize reporting',
+                    canon: 'Tools to calculate and report changes in lesion diameter, volume, and density across timepoints, aligning with common clinical criteria'
+                },
+                {
+                    task: 'Multi-Modality Fusion (e.g., PET/CT)',
+                    ge: 'Supports fused display of PET/CT and PET/MR; advanced co-registration and analysis happen in connected applications',
+                    philips: 'Native multi-modality fusion engine; key for radiation therapy planning, enabling precise fusion of diagnostic CT, MR, and PET for target delineation',
+                    siemens: 'Strong image fusion capabilities within its applications, crucial for diagnostic reading and planning in neuro-oncology, prostate, and liver',
+                    canon: 'VIP (Vitrea® Intelligent Fusion): Advanced fusion tools for PET/CT, SPECT/CT, and MR, often highlighted for liver and prostate cancer evaluation'
+                }
+            ],
+            'neuro': [
+                {
+                    task: 'Acute Stroke Triage',
+                    ge: 'AI prioritization can flag suspected Large Vessel Occlusion (LVO) or hemorrhage from integrated apps; fast viewer for accessing CT Angiography/Perfusion maps',
+                    philips: 'Tools for automated ASPECTS scoring, core-penumbra quantification on CT Perfusion, and vessel analysis (e.g., clot detection, collateral scoring)',
+                    siemens: 'Applications like syngo.via NeuroAngioCT provide automated LVO detection, ASPECTS scoring, and perfusion map processing to support rapid decision-making',
+                    canon: 'Neuro Perfusion: Capable of processing CT/MR perfusion data to generate blood flow (CBF), volume (CBV), and mismatch maps; vessel analysis for stenosis and aneurysm assessment'
+                },
+                {
+                    task: 'Neurodegenerative Disease / Dementia',
+                    ge: 'Enables efficient comparison of serial MRIs; integrated AI tools can provide automated hippocampal volumetry or brain age estimation',
+                    philips: 'Neuro Suite: Features for automated longitudinal brain analysis, volumetry of key structures (hippocampus, ventricles), and cortical thickness mapping',
+                    siemens: 'syngo.via MR Neuro Dementia offers pipelines for automated brain segmentation, volumetry, and generation of Z-score maps compared to normative databases',
+                    canon: 'Brain Analysis: Tools for automatic brain segmentation into tissue types (GM, WM, CSF) and volumetric measurement of structures for atrophy assessment'
+                },
+                {
+                    task: 'Brain Tumor Analysis',
+                    ge: 'Facilitates review of multi-parametric MRI (e.g., perfusion, spectroscopy); integrated advanced apps provide volumetric segmentation for surgical/radiation planning',
+                    philips: 'Oncology Suite capabilities extend to neuro: Multi-modal tumor segmentation (T1+Gd, T2, FLAIR), volumetric analysis, and support for radiation therapy planning structure sets',
+                    siemens: 'Comprehensive tools for multi-parametric tumor analysis, manual/auto segmentation, and integration with neuronavigation and radiosurgery systems',
+                    canon: 'Tools for tumor volumetry and 3D modeling; Advanced fusion (VIP) is key for integrating functional MRI (fMRI) or DTI tractography with anatomic scans for surgical planning'
+                }
+            ],
+            'msk': [
+                {
+                    task: 'Joint Analysis & Pre-Surgical Planning',
+                    ge: 'Viewer for assessing MR/CT arthrograms; connects to AW applications for 3D bone model creation, angle measurements, and virtual surgical planning',
+                    philips: 'Tools for automated cartilage and meniscus segmentation on knee MRI, joint space quantification, and 3D modeling of bones from CT for implant planning',
+                    siemens: 'Applications like syngo.via MSK provide workflows for automated knee cartilage thickness mapping, meniscus analysis, and pre-operative planning for osteotomies or joint replacements',
+                    canon: 'Bone Analysis: Strong tools for creating 3D bone surface models from CT, performing automated leg length and alignment measurements, and planning for total knee/hip arthroplasty'
+                },
+                {
+                    task: 'Fracture Detection & Characterization',
+                    ge: 'AI-prioritization can flag suspected fractures from integrated apps; viewer facilitates detailed multi-planar assessment of complex fractures',
+                    philips: 'Capabilities for complex 3D fracture reformatting (e.g., pelvic, facial), automated bone subtraction in trauma CT, and volumetric fragment measurement',
+                    siemens: 'Integrated AI applications (e.g., AI-Rad Companion Bone) can provide automated detection and highlighting of vertebral body fractures',
+                    canon: 'Excellent multi-planar and curved planar reformatting tools essential for evaluating spinal and pelvic ring fractures; 3D volume rendering for fracture visualization'
+                },
+                {
+                    task: 'Body Composition & Muscle/Fat Analysis',
+                    ge: 'Can display quantitative maps from specialized applications that perform tissue segmentation for muscle and fat',
+                    philips: 'Body Composition Analysis: AI-driven tools for automated segmentation of visceral/subcutaneous fat and skeletal muscle mass on routine CT, providing prognostic indicators',
+                    siemens: 'Applications like AI-Rad Companion Body Composition offer fully automated analysis of body composition (muscle, visceral fat, subcutaneous fat) from abdominal CT',
+                    canon: 'Features for manual and semi-automatic segmentation of muscle and fat compartments on CT, enabling cross-sectional area and density analysis'
+                }
+            ]
+        };
+        
+        // Function to update clinical detail table
+        function updateClinicalDetailTable(clinicalArea) {
+            const tableBody = document.getElementById('clinicalDetailBody');
+            tableBody.innerHTML = '';
+            
+            let dataToShow;
+            
+            if (clinicalArea === 'all') {
+                // Show cardiac by default when "all" is selected
+                dataToShow = clinicalDetailData['cardiac'];
+                document.getElementById('clinicalDetailSelect').value = 'cardiac';
+            } else if (clinicalDetailData[clinicalArea]) {
+                dataToShow = clinicalDetailData[clinicalArea];
+                document.getElementById('clinicalDetailSelect').value = clinicalArea;
+            } else {
+                // Fallback to cardiac if area not found
+                dataToShow = clinicalDetailData['cardiac'];
+                document.getElementById('clinicalDetailSelect').value = 'cardiac';
+            }
+            
+            // Populate table with data
+            dataToShow.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${item.task}</strong></td>
+                    <td>${item.ge}</td>
+                    <td>${item.philips}</td>
+                    <td>${item.siemens}</td>
+                    <td>${item.canon}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+            
+            // Update table title based on selection
+            const areaNames = {
+                'cardiac': 'Cardiac Imaging',
+                'oncology': 'Oncology',
+                'neuro': 'Neuroimaging',
+                'msk': 'Musculoskeletal',
+                'thoracic': 'Thoracic/Chest Imaging',
+                'abdominal': 'Abdominal & Pelvic Imaging',
+                'vascular': 'Vascular Imaging',
+                'pediatric': 'Pediatric Imaging',
+                'breast': 'Breast Imaging',
+                'point-of-care': 'Point-of-Care & Emergency'
+            };
+            
+            const tableTitle = document.querySelector('#clinical-detail h2');
+            if (tableTitle && areaNames[clinicalArea]) {
+                tableTitle.textContent = `Detailed Clinical Task Comparisons: ${areaNames[clinicalArea]}`;
+            }
+        }
+        
+        // Initialize with some visual effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add animation to vendor cards
+            const vendorCards = document.querySelectorAll('.vendor-card');
+            vendorCards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('animate-in');
+            });
+            
+            // Initialize clinical detail table
+            updateClinicalDetailTable('cardiac');
+            
+            // Set up hover effects for table rows
+            const tableRows = document.querySelectorAll('.comparison-table tr, .ai-breakdown-table tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f0f7ff';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    if (!this.classList.contains('highlight')) {
+                        this.style.backgroundColor = '';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
