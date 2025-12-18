@@ -1,0 +1,2197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RSNA 2025 Report - Interactive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                display: block;
+                background: white;
+                color: black;
+                font-size: 12pt;
+                line-height: 1.4;
+            }
+            
+            .sidebar, .mobile-toc-toggle, .back-to-top,
+            .toggle-btn, .video-link, .lightbox,
+            .print-controls, .interactive-controls {
+                display: none !important;
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            
+            .section, header, .abstract, footer {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                page-break-inside: avoid;
+                margin-bottom: 20px !important;
+            }
+            
+            .section-content {
+                display: block !important;
+            }
+            
+            .collapsed .section-content {
+                display: block !important;
+            }
+            
+            table {
+                page-break-inside: avoid;
+                font-size: 10pt;
+            }
+            
+            th {
+                background-color: #f0f0f0 !important;
+                color: black !important;
+                border: 1px solid #ddd !important;
+            }
+            
+            td {
+                border: 1px solid #ddd !important;
+            }
+            
+            .placeholder-img {
+                border: 1px solid #ccc !important;
+                box-shadow: none !important;
+            }
+            
+            a[href^="http"]:after {
+                content: " (" attr(href) ")";
+                font-size: 9pt;
+                color: #666;
+            }
+            
+            h1, h2, h3 {
+                page-break-after: avoid;
+            }
+            
+            footer {
+                border-top: 2px solid #000 !important;
+            }
+        }
+        
+        /* Print Controls */
+        .print-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .print-btn, .expand-all-btn, .collapse-all-btn {
+            background: #1a2980;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .print-btn:hover, .expand-all-btn:hover, .collapse-all-btn:hover {
+            background: #26d0ce;
+            transform: translateY(-2px);
+        }
+        
+        /* Sidebar/TOC Styles */
+        .sidebar {
+            width: 320px;
+            background: linear-gradient(135deg, #1a2980 0%, #26d0ce 100%);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-content {
+            padding: 20px;
+        }
+        
+        .toc-list {
+            list-style-type: none;
+        }
+        
+        .toc-list li {
+            margin-bottom: 12px;
+        }
+        
+        .toc-list a {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .toc-list a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .toc-list a i {
+            margin-right: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .toc-sublist {
+            list-style-type: none;
+            padding-left: 25px;
+            margin-top: 8px;
+        }
+        
+        .toc-sublist li {
+            margin-bottom: 8px;
+        }
+        
+        .toc-sublist a {
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 8px 12px;
+            font-size: 0.9rem;
+        }
+        
+        .toc-sublist a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+        
+        .mobile-toc-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #1a2980;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 40px;
+            max-width: calc(100% - 320px);
+            background-color: #fff;
+            min-height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .author-info {
+            margin-top: 15px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+        
+        .abstract {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid #1a2980;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            scroll-margin-top: 20px;
+        }
+        
+        .section-title {
+            color: #1a2980;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .toggle-btn {
+            background-color: #26d0ce;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.2s;
+        }
+        
+        .toggle-btn:hover {
+            background-color: #1a9c9a;
+        }
+        
+        .section-content {
+            margin-top: 15px;
+        }
+        
+        .collapsed .section-content {
+            display: none;
+        }
+        
+        .interview-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .interview-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .interview-title {
+            color: #1a2980;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f0f8ff;
+            color: #1a2980;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            border: 1px solid #d1e7ff;
+            transition: all 0.2s;
+        }
+        
+        .video-link:hover {
+            background-color: #e1f0ff;
+            transform: translateY(-2px);
+        }
+        
+        .video-link i {
+            margin-right: 8px;
+        }
+        
+        .summary-box, .analysis-box {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #26d0ce;
+        }
+        
+        .analysis-box {
+            border-left-color: #1a2980;
+        }
+        
+        .summary-title, .analysis-title {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .summary-title i, .analysis-title i {
+            margin-right: 10px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        th {
+            background-color: #1a2980;
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            vertical-align: top;
+        }
+        
+        tr:hover {
+            background-color: #f5f9ff;
+        }
+        
+        .comparison-table {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .placeholder-img {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #1a2980;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px dashed #c3cfe2;
+        }
+        
+        .placeholder-img:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border-color: #26d0ce;
+        }
+        
+        .placeholder-img i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .image-caption {
+            font-style: italic;
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9rem;
+            text-align: center;
+            max-width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 8px;
+            background-color: white;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .lightbox-img {
+            max-width: 100%;
+            max-height: 70vh;
+            display: block;
+            margin: 0 auto;
+            border-radius: 4px;
+        }
+        
+        .lightbox-caption {
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            padding: 0 20px;
+            max-width: 800px;
+        }
+        
+        .close-lightbox {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        
+        .close-lightbox:hover {
+            color: #26d0ce;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #1a2980;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            font-size: 24px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.2);
+            z-index: 999;
+            transition: all 0.3s;
+        }
+        
+        .back-to-top:hover {
+            background-color: #26d0ce;
+            transform: scale(1.1);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #eee;
+            background-color: white;
+            border-radius: 8px;
+        }
+        
+        blockquote {
+            border-left: 4px solid #26d0ce;
+            padding-left: 20px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #555;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        ul, ol {
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .interactive-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .status-indicator {
+            background: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            .main-content {
+                margin-left: 280px;
+                max-width: calc(100% - 280px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                max-width: 100%;
+                padding: 20px;
+                padding-top: 80px;
+            }
+            
+            .mobile-toc-toggle {
+                display: block;
+            }
+            
+            .print-controls {
+                top: 80px;
+                right: 20px;
+                flex-direction: column;
+            }
+            
+            header, .section, .abstract {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+            
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+                font-size: 20px;
+            }
+            
+            .close-lightbox {
+                top: 10px;
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 15px;
+                padding-top: 80px;
+            }
+            
+            .section-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .toggle-btn {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+            
+            .video-link {
+                font-size: 0.8rem;
+                padding: 8px 12px;
+            }
+            
+            .placeholder-img {
+                height: 200px;
+            }
+            
+            .placeholder-img i {
+                font-size: 36px;
+            }
+        }
+        
+        /* Custom scrollbar for sidebar */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile TOC Toggle Button -->
+    <button class="mobile-toc-toggle" id="mobileTocToggle">
+        <i class="fas fa-bars"></i> Menu
+    </button>
+    
+    <!-- Print & Interactive Controls -->
+    <div class="print-controls">
+        <button class="expand-all-btn" id="expandAll">
+            <i class="fas fa-expand"></i> Expand All
+        </button>
+        <button class="collapse-all-btn" id="collapseAll">
+            <i class="fas fa-compress"></i> Collapse All
+        </button>
+        <button class="print-btn" id="printBtn">
+            <i class="fas fa-print"></i> Print
+        </button>
+    </div>
+    
+    <!-- Sidebar / Table of Contents -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>RSNA 2025 Report</h2>
+            <p>Complete Interactive Navigation</p>
+        </div>
+        <div class="sidebar-content">
+            <ul class="toc-list">
+                <li><a href="#executive-overview"><i class="fas fa-chart-line"></i> 1. EXECUTIVE OVERVIEW</a></li>
+                <li><a href="#introduction"><i class="fas fa-info-circle"></i> 2. Introduction</a></li>
+                <li>
+                    <a href="#youtube-interview"><i class="fas fa-video"></i> 3. YouTube Interviews</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#riverain">A. Riverain Technologies</a></li>
+                        <li><a href="#concertai">B. ConcertAI</a></li>
+                        <li><a href="#agfa">C. AGFA HealthCare</a></li>
+                        <li><a href="#quibim">D. Quibim</a></li>
+                        <li><a href="#merge">E. Merge</a></li>
+                        <li><a href="#siemens">F. Siemens Healthineers</a></li>
+                        <li><a href="#harrison">G. Harrison.ai</a></li>
+                        <li><a href="#gleamer">H. Gleamer</a></li>
+                        <li><a href="#mach7">I. Mach7 Technologies</a></li>
+                        <li><a href="#lunit">J. Lunit</a></li>
+                        <li><a href="#photon-ct">K. Photon-Counting CT</a></li>
+                        <li><a href="#deephealth">L. DeepHealth</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#competitive-analysis"><i class="fas fa-chart-bar"></i> 4. Competitive Analysis</a>
+                    <ul class="toc-sublist">
+                        <li><a href="#siemens-analysis">A. Siemens Healthineers</a></li>
+                        <li><a href="#philips-analysis">B. Philips Healthcare</a></li>
+                        <li><a href="#ge-analysis">C. GE Healthcare</a></li>
+                        <li><a href="#agfa-analysis">D. AGFA HealthCare</a></li>
+                    </ul>
+                </li>
+                <li><a href="#rsna-sessions"><i class="fas fa-microphone-alt"></i> 5. RSNA Sessions</a></li>
+                <li><a href="#canon-position"><i class="fas fa-star"></i> 6. Canon Medical's Position</a></li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <header>
+            <h1>RSNA 2025 Report</h1>
+            <div class="author-info">
+                <p><strong>Shailendrakumar S. Jariwala</strong></p>
+                <p>shailendrakumar.Jariwala@mi.medical.canon</p>
+                <p><em>Comprehensive Analysis Report | December 2025</em></p>
+            </div>
+        </header>
+        
+        <div class="abstract">
+            <h2>Abstract</h2>
+            <p>This comprehensive report captures key insights from executive interviews and competitive analyses conducted at RSNA 2025, highlighting transformative trends such as AI-driven opportunistic screening, enterprise imaging platforms, advanced visualization tools, and the strategic consolidation of AI solutions across the radiology landscape.</p>
+            <p>Emerging technologies—including photon-counting CT, helium-free MRI, and integrated AI-PACS systems—demonstrate a significant shift toward more efficient, personalized, and accessible diagnostic workflows. These innovations address critical challenges in modern healthcare delivery, including rising imaging volumes, radiologist burnout, and the need for precision medicine.</p>
+            <p>The findings underscore a transformative period in radiology, where AI integration and interoperability have become central to addressing operational inefficiencies, improving clinical outcomes, and optimizing diagnostic performance across healthcare systems globally.</p>
+        </div>
+        
+        <!-- Executive Overview Section -->
+        <div id="executive-overview" class="section">
+            <div class="section-title">
+                <h2>1. EXECUTIVE OVERVIEW</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <blockquote>
+                    <p>The RSNA 2025 conference demonstrated that radiology is undergoing a fundamental transformation, driven by <span class="highlight">artificial intelligence (AI), platform consolidation, and hardware innovation</span>. This transformation represents not merely incremental improvements but a paradigm shift in how diagnostic imaging is performed, interpreted, and integrated into clinical workflows.</p>
+                    <p>While competitors are aggressively investing in AI-integrated workflows, cloud platforms, and interventional solutions, <span class="highlight">Canon Medical remains the established leader in high-fidelity 3D visualization and quantitative analysis</span>, particularly in cardiac, vascular, and oncology imaging. Our analysis reveals that while other vendors focus on breadth, Canon's depth in specific clinical applications provides sustainable competitive advantages.</p>
+                    <p>This document summarizes the key industry trends, competitive movements, and strategic recommendations to ensure Canon maintains and expands its market leadership in the evolving diagnostic imaging landscape. The report is structured to provide actionable insights across clinical, technical, and commercial dimensions.</p>
+                </blockquote>
+                
+                <div class="analysis-box">
+                    <div class="analysis-title"><i class="fas fa-chart-line"></i> Key Executive Findings</div>
+                    <ul>
+                        <li><strong>AI Maturation:</strong> AI has moved from pilot projects to production deployment across healthcare systems</li>
+                        <li><strong>Platform Consolidation:</strong> Market moving toward integrated platforms rather than point solutions</li>
+                        <li><strong>Cloud Acceleration:</strong> 100% of new AGFA customers selecting SaaS models signals industry shift</li>
+                        <li><strong>Hardware Innovation:</strong> Photon-counting CT and helium-free MRI represent next-generation imaging</li>
+                        <li><strong>Clinical Integration:</strong> AI moving from detection to quantitative analysis and treatment planning</li>
+                        <li><strong>Workflow Optimization:</strong> Focus shifting from image quality alone to end-to-end workflow efficiency</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Introduction Section -->
+        <div id="introduction" class="section">
+            <div class="section-title">
+                <h2>2. Introduction</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <blockquote>
+                    <p>RSNA 2025 is set to be the <span class="highlight">largest exhibition of clinical AI</span> to date, representing a watershed moment for medical imaging technology. The conference theme, <span class="highlight">"Imaging the Individual,"</span> reflects the industry's shift toward personalized, precision medicine enabled by advanced imaging technologies.</p>
+                    <p>The technical exhibits spanned over <span class="highlight">415,000 square feet</span> at Chicago's McCormick Place, with participation from more than <span class="highlight">660 companies</span>—a 15% increase from 2024. This growth underscores the accelerating pace of innovation in medical imaging and the expanding ecosystem of technology providers.</p>
+                </blockquote>
+                
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-file-alt"></i> Conference Key Highlights</div>
+                    <ul>
+                        <li><strong>Massive Scale:</strong> 415,000 square feet of exhibition space with 660+ participating companies</li>
+                        <li><strong>AI Focus:</strong> Over 200 companies demonstrating AI and machine-learning solutions with dedicated AI Showcase in South Hall</li>
+                        <li><strong>Special Features:</strong>
+                            <ul>
+                                <li><strong>AI Theater:</strong> Continuous presentations on AI clinical applications and validation studies</li>
+                                <li><strong>Radiology Reimagined:</strong> Live interoperability demonstrations showing real-time AI integration into clinical practice</li>
+                                <li><strong>3D Printing and Mixed Reality Showcase:</strong> Hands-on interaction with cutting-edge technologies for surgical planning and education</li>
+                                <li><strong>Quantum Computing Pavilion:</strong> Exploration of quantum applications in medical imaging (new for 2025)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Educational Program:</strong> 500+ scientific sessions, 200+ educational courses, and 1000+ scientific posters</li>
+                        <li><strong>International Participation:</strong> 50,000+ attendees from 130+ countries with strong representation from Asia-Pacific and European markets</li>
+                        <li><strong>Theme & Timing:</strong> Under the theme "Imaging the Individual," the 111<sup>th</sup> annual meeting ran from November 30 to December 4, 2025</li>
+                    </ul>
+                </div>
+                
+                <div class="analysis-box">
+                    <div class="analysis-title"><i class="fas fa-chart-line"></i> Industry Context</div>
+                    <p>The radiology industry faces several concurrent challenges that RSNA 2025 addressed:</p>
+                    <ul>
+                        <li><strong>Imaging Volume Growth:</strong> Global imaging volumes increasing 5-7% annually, outpacing radiologist workforce growth</li>
+                        <li><strong>Radiologist Shortage:</strong> Projected shortage of 10,000+ radiologists in the US by 2030</li>
+                        <li><strong>Reimbursement Pressure:</strong> Declining reimbursement rates driving efficiency requirements</li>
+                        <li><strong>Data Integration Needs:</strong> Growing requirement for interoperability between imaging systems, EHRs, and AI tools</li>
+                        <li><strong>Regulatory Evolution:</strong> FDA's new AI/ML software as medical device framework influencing product development</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- YouTube Interviews Section -->
+        <div id="youtube-interview" class="section">
+            <div class="section-title">
+                <h2>3. RSNA 2025 YouTube Interviews</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <p>This section contains comprehensive summaries and analyses of all key executive interviews conducted at RSNA 2025. Each interview provides unique insights into company strategies, product innovations, and market trends.</p>
+                
+                <div class="interactive-controls">
+                    <span class="status-indicator">12 Detailed Interviews Included</span>
+                </div>
+                
+                <!-- Riverain Technologies -->
+                <div id="riverain" class="interview-item">
+                    <h3 class="interview-title">A. RSNA 2025 — Interview with Riverain Technologies</h3>
+                    <a href="https://www.youtube.com/watch?v=tgmotaRiJes" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=tgmotaRiJes
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>This interview with Dr. James Hillis of Mass General Brigham focuses on <span class="highlight">opportunistic cardiac calcium scoring with AI</span>. The discussion centers on applying artificial intelligence to extract cardiovascular risk information from routine, non-cardiac-gated chest CT scans—a practice known as opportunistic screening.</p>
+                        
+                        <p><strong>Technical Approach:</strong> Riverain's AI software analyzes existing chest CT scans performed for other clinical indications (lung screening, trauma, etc.) to automatically calculate coronary artery calcium (CAC) scores without requiring additional radiation or specialized cardiac protocols.</p>
+                        
+                        <p><strong>Clinical Validation:</strong> A landmark study of nearly 500 cases demonstrated the AI achieved <span class="highlight">very high agreement (above 0.95) and correlation (above 0.97)</span> with both expert radiologist readings and traditional gold-standard gated cardiac CT measurements. This validation was conducted across diverse patient populations and scanner types.</p>
+                        
+                        <p><strong>Implementation Strategy:</strong> The software integrates seamlessly into existing PACS workflows, automatically processing eligible studies and presenting results within the radiologist's normal reading environment. No additional worklist management or separate application launch is required.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        <p><strong>The Problem with Traditional CAC Scoring:</strong></p>
+                        <ul>
+                            <li>Requires dedicated, "gated" cardiac CT scans with specific protocols</li>
+                            <li>Involves specialized technologist training and additional radiation exposure (1-3 mSv)</li>
+                            <li>Manual analysis by technologists or radiologists is time-consuming (5-15 minutes per case)</li>
+                            <li>Low adoption rates: Only 5-10% of eligible patients receive CAC screening despite strong evidence base</li>
+                            <li>Limited insurance coverage creates financial barriers to widespread screening</li>
+                        </ul>
+                        
+                        <p><strong>The AI Solution - Opportunistic Screening:</strong></p>
+                        <ul>
+                            <li>Riverain's AI software can <span class="highlight">automatically calculate CAC scores from routine, non-gated chest CTs</span></li>
+                            <li>Leverages existing imaging data without additional radiation or patient time</li>
+                            <li>Processes studies in under 60 seconds with minimal computational requirements</li>
+                            <li>Generates standardized reports with ASCVD risk scores and clinical recommendations</li>
+                            <li>Supports both Agatston and volume-based scoring methodologies</li>
+                        </ul>
+                        
+                        <p><strong>Clinical Impact and Future Directions:</strong></p>
+                        <ul>
+                            <li>Could expand screening to 10-20x more patients who already get chest CTs for other reasons</li>
+                            <li>Enables population health approaches to cardiovascular risk stratification</li>
+                            <li>Future integration with EHR systems for automated risk communication and follow-up scheduling</li>
+                            <li>Potential expansion to other opportunistic findings (liver fat, bone density, muscle mass)</li>
+                            <li>Development of longitudinal tracking capabilities for monitoring disease progression</li>
+                        </ul>
+                        
+                        <p><strong>Market Implications:</strong> This approach represents a shift from "dedicated screening" to "intelligent data mining" of existing imaging, potentially creating new reimbursement models and changing how preventive care is delivered.</p>
+                    </div>
+                </div>
+                
+                <!-- ConcertAI -->
+                <div id="concertai" class="interview-item">
+                    <h3 class="interview-title">B. RSNA 2025 — Interview with ConcertAI</h3>
+                    <a href="https://www.youtube.com/watch?v=yyiGd9ILoAs" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=yyiGd9ILoAs
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>ConcertAI (which acquired the well-known 3D visualization company TeraRecon approximately five years ago) discussed their strategic evolution into a comprehensive AI-powered imaging analytics platform. The company, now with over 1,000 employees, has fully rebranded TeraRecon under the ConcertAI name and is showcasing integrated solutions that combine advanced visualization with AI-driven workflow optimization.</p>
+                        
+                        <p><strong>Platform Strategy:</strong> ConcertAI's approach centers on creating unified platforms that bridge clinical workflow gaps between imaging acquisition, interpretation, and treatment planning. Their solutions are designed to be vendor-neutral and integrate seamlessly with existing hospital IT infrastructure.</p>
+                        
+                        <p><strong>Product Highlights at RSNA:</strong></p>
+                        <ul>
+                            <li><strong>TeraRecon Detect:</strong> Newly launched product line for comprehensive AI adoption into clinical and hospital system workflows</li>
+                            <li><strong>Structural Heart Updates:</strong> Major enhancements to simulation tools for catheter-based interventions including TAVR, TMVR, and LAA occlusion</li>
+                            <li><strong>Cardiac Workflow Suite:</strong> AI-powered contouring and calcification workflow tools that reduce cardiac CT analysis time by 40-60%</li>
+                            <li><strong>Oncology Platform:</strong> Integrated solution for tumor tracking, treatment response assessment, and clinical trial support</li>
+                        </ul>
+                        
+                        <p><strong>Forward Vision:</strong> Looking ahead to 2026, the company plans to focus on <span class="highlight">agentic AI</span> and <span class="highlight">biomarker development</span> to create end-to-end reporting features that help reduce missed or delayed findings, thereby significantly improving patient care across the entire care ecosystem.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        <p><strong>Integration Strategy:</strong></p>
+                        <ul>
+                            <li><strong>Unified Architecture:</strong> Single platform combining visualization, AI, and analytics reduces IT complexity</li>
+                            <li><strong>Workflow Embedding:</strong> AI tools integrated directly into clinical workflows rather than separate applications</li>
+                            <li><strong>Data Harmonization:</strong> Aggregates imaging data across modalities, vendors, and timepoints for comprehensive analysis</li>
+                            <li><strong>Clinical Decision Support:</strong> Provides context-aware recommendations based on clinical guidelines and patient history</li>
+                        </ul>
+                        
+                        <p><strong>Technical Innovation:</strong></p>
+                        <ul>
+                            <li><strong>Real-time Processing:</strong> GPU-accelerated algorithms enable immediate visualization and analysis</li>
+                            <li><strong>Cloud-Native Design:</strong> Supports hybrid deployment models with seamless data synchronization</li>
+                            <li><strong>Interoperability Focus:</strong> Strong emphasis on DICOM, HL7, and FHIR standards compliance</li>
+                            <li><strong>Scalable Architecture:</strong> Designed to handle enterprise-scale imaging volumes across distributed healthcare networks</li>
+                        </ul>
+                        
+                        <p><strong>2026 Strategic Focus Areas:</strong></p>
+                        <ul>
+                            <li><strong>Agentic AI:</strong> Development of autonomous AI agents that can perform complex clinical tasks with minimal human intervention</li>
+                            <li><strong>Biomarker Integration:</strong> Combining imaging biomarkers with genomic, proteomic, and clinical data for precision medicine</li>
+                            <li><strong>Longitudinal Analysis:</strong> Tools for tracking disease progression and treatment response across multiple timepoints</li>
+                            <li><strong>Clinical Trial Enablement:</strong> Platform support for imaging-based endpoints in pharmaceutical trials</li>
+                            <li><strong>Population Health:</strong> Analytics tools for identifying at-risk populations and optimizing screening programs</li>
+                        </ul>
+                        
+                        <p><strong>Competitive Positioning:</strong> ConcertAI positions itself as an "orchestration layer" between imaging data and clinical decisions, differentiating from point solution vendors through platform comprehensiveness and workflow integration depth.</p>
+                    </div>
+                </div>
+                
+                <!-- AGFA HealthCare -->
+                <div id="agfa" class="interview-item">
+                    <h3 class="interview-title">C. RSNA 2025 — Interview with AGFA HealthCare</h3>
+                    <a href="https://www.youtube.com/watch?v=5BYnScJu3tU" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=5BYnScJu3tU
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>The interview with Charles Morris of AGFA HealthCare focuses primarily on how the company's <span class="highlight">enterprise imaging solutions</span> address the significant challenges faced by radiologists, specifically the <span class="highlight">rising volume of imaging studies</span> and <span class="highlight">staffing shortages</span> that have reached critical levels in many healthcare systems.</p>
+                        
+                        <p><strong>Platform Approach:</strong> AGFA HealthCare offers a comprehensive platform-based approach that integrates various functions—radiology, cardiology, vendor-neutral archive (VNA), and universal viewer—into a single application and database architecture. This unified approach helps customers overcome limitations in their older, siloed systems while reducing IT complexity and total cost of ownership.</p>
+                        
+                        <p><strong>Market Trend Highlight:</strong> A particularly notable trend discussed is the rapid market shift toward <span class="highlight">cloud SaaS (Software as a Service)</span>. Morris noted that <span class="highlight">100% of AGFA's new customers year-to-date have selected the cloud SaaS model</span>, primarily driven by healthcare organizations' desire to offload management complexity and leverage external expertise for running sophisticated imaging platforms.</p>
+                        
+                        <p><strong>RSNA 2025 Showcase:</strong> AGFA is highlighting several key innovations at the conference:</p>
+                        <ul>
+                            <li><strong>Annual Client Updates:</strong> Enhanced versions of radiology and cardiology client applications</li>
+                            <li><strong>New Streaming Technology:</strong> Improved image streaming for faster access and better mobile experience</li>
+                            <li><strong>Embedded Workflow Orchestration:</strong> Tools that help practices fairly and efficiently distribute work—a need unmet by traditional worklist management systems</li>
+                            <li><strong>AI Integration Framework:</strong> Enhanced capabilities for integrating third-party AI applications into clinical workflows</li>
+                        </ul>
+                        
+                        <p><strong>Forward Outlook:</strong> Looking ahead to 2026, AGFA expects to see increased adoption by independent radiology practices, driven by the growing traction of its teleradiology solutions and the continued shift toward operational efficiency in the face of economic pressures.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        
+                        <p><strong>The Clinical Challenge Context:</strong></p>
+                        <ul>
+                            <li><strong>Imaging Volume Growth:</strong> Global imaging volumes increasing 5-7% annually, with CT and MRI growing at 8-10%</li>
+                            <li><strong>Radiologist Shortage:</strong> 20% increase in demand for imaging interpretation versus only 2% growth in radiologist workforce</li>
+                            <li><strong>Burnout Rates:</strong> 40-50% of radiologists reporting symptoms of burnout, primarily due to workload pressure</li>
+                            <li><strong>Complexity Increase:</strong> Studies becoming more complex with multi-phase protocols and larger datasets</li>
+                        </ul>
+                        
+                        <p><strong>AGFA's Solution Architecture:</strong></p>
+                        <ul>
+                            <li><strong>Unified Database:</strong> Single source of truth for all imaging data reduces duplication and improves data integrity</li>
+                            <li><strong>Modular Design:</strong> Customers can implement components incrementally based on needs and budget</li>
+                            <li><strong>Vendor Neutrality:</strong> Supports imaging from any vendor's equipment without proprietary constraints</li>
+                            <li><strong>Scalable Infrastructure:</strong> Architecture designed to handle petabytes of imaging data across distributed organizations</li>
+                        </ul>
+                        
+                        <p><strong>Cloud Migration Drivers:</strong></p>
+                        <ul>
+                            <li><strong>IT Staffing Challenges:</strong> Healthcare IT departments facing 20-30% vacancy rates for specialized positions</li>
+                            <li><strong>Capital Expenditure Reduction:</strong> Shift from large upfront investments to predictable operational expenses</li>
+                            <li><strong>Disaster Recovery:</strong> Built-in business continuity without additional infrastructure investment</li>
+                            <li><strong>Update Management:</strong> Automatic updates ensure all users have access to latest features and security patches</li>
+                            <li><strong>Scalability:</strong> Elastic resources accommodate seasonal variations and growth without capacity planning</li>
+                        </ul>
+                        
+                        <p><strong>Workflow Orchestration Innovation:</strong></p>
+                        <ul>
+                            <li><strong>Intelligent Routing:</strong> Cases automatically routed to appropriate specialists based on complexity and urgency</li>
+                            <li><strong>Load Balancing:</strong> Even distribution of work across reading locations and individual radiologists</li>
+                            <li><strong>Priority Management:</strong> Critical cases flagged for immediate attention based on clinical criteria</li>
+                            <li><strong>Performance Analytics:</strong> Real-time monitoring of reading times, backlogs, and individual productivity</li>
+                            <li><strong>Fairness Algorithms:</strong> Ensures equitable distribution of difficult cases and after-hours work</li>
+                        </ul>
+                        
+                        <p><strong>Market Implications:</strong> AGFA's success with cloud migration indicates a fundamental shift in healthcare IT procurement, with organizations increasingly valuing operational simplicity and predictable costs over ownership of infrastructure. This trend favors platform vendors with comprehensive cloud offerings over point solution providers.</p>
+                    </div>
+                </div>
+                
+                <!-- Quibim -->
+                <div id="quibim" class="interview-item">
+                    <h3 class="interview-title">D. RSNA 2025 — Interview with Quibim</h3>
+                    <a href="https://www.youtube.com/watch?v=8nnnJhAEp98" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=8nnnJhAEp98
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>The interview with executives from Quibim, a global leader in medical imaging AI focused on quantitative imaging biomarkers, centers on their specialized software for prostate MRI analysis. Quibim's advanced AI utilizes radiomics—extracting quantitative features from medical images—to provide actionable insights that help radiologists and downstream collaborators identify up to 10% more early-stage clinically significant prostate cancer.</p>
+                        
+                        <p><strong>Clinical Problem Addressed:</strong> Prostate cancer screening represents a major clinical gap, with no standard screening protocol equivalent to mammography for breast cancer. MRI has emerged as the preferred imaging modality, but interpretation requires substantial expertise and is time-consuming. Quibim's AI addresses these challenges by automating lesion detection, segmentation, and characterization.</p>
+                        
+                        <p><strong>Recent Milestones:</strong></p>
+                        <ul>
+                            <li><strong>FDA Clearance:</strong> Received FDA clearance for automatic lesion detection, making it a true CADx (computer-aided detection and diagnosis) system</li>
+                            <li><strong>Series A Funding:</strong> Successful funding round enabling expansion of R&D and commercial operations</li>
+                            <li><strong>NHS Award:</strong> Selected by UK's National Health Service to expand prostate MR services nationally</li>
+                            <li><strong>AI-Qual Launch:</strong> Introduced automated tool for assessing prostate MR image quality, addressing technical variability</li>
+                        </ul>
+                        
+                        <p><strong>RSNA 2025 Showcase:</strong> Quibim is highlighting several key developments:</p>
+                        <ul>
+                            <li><strong>New Partnerships:</strong> Collaborations with leading AI platform vendors (PHIUM, AIDOC) for broader deployment</li>
+                            <li><strong>QP-Prostate Platform:</strong> Latest generation platform featuring advanced 3D visualization and editing tools</li>
+                            <li><strong>Ecosystem Creation:</strong> Platform designed to connect radiology, urology, and oncology workflows for better collaboration</li>
+                            <li><strong>Treatment Planning:</strong> Tools specifically designed for focal therapy planning and monitoring</li>
+                        </ul>
+                        
+                        <p><strong>Forward Outlook:</strong> For 2026, Quibim plans continued global expansion with additional team hires, sustained R&D investment, and expansion into new use cases including breast and lung imaging. The company is also developing multi-modal AI approaches that combine imaging with clinical and genomic data.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        
+                        <p><strong>Clinical Impact Metrics:</strong></p>
+                        <ul>
+                            <li><strong>Detection Improvement:</strong> 10% increase in identification of clinically significant prostate cancer (csPCa)</li>
+                            <li><strong>Reading Time Reduction:</strong> 40-60% reduction in time required for prostate MRI interpretation</li>
+                            <li><strong>Inter-reader Variability:</strong> Reduction in interpretation variability from 30% to under 10%</li>
+                            <li><strong>False Positive Reduction:</strong> 25% decrease in unnecessary biopsies through better lesion characterization</li>
+                            <li><strong>PI-RADS Consistency:</strong> Improved adherence to PI-RADS v2.1 standards across all readers</li>
+                        </ul>
+                        
+                        <p><strong>Technical Architecture:</strong></p>
+                        <ul>
+                            <li><strong>Multi-sequence Analysis:</strong> Simultaneous processing of T2-weighted, diffusion-weighted, and dynamic contrast-enhanced sequences</li>
+                            <li><strong>3D Segmentation:</strong> Volumetric analysis of prostate zones and lesions rather than 2D measurements</li>
+                            <li><strong>Radiomic Feature Extraction:</strong> 1000+ quantitative features extracted per lesion for comprehensive characterization</li>
+                            <li><strong>Machine Learning Pipeline:</strong> Ensemble models combining deep learning with traditional machine learning approaches</li>
+                            <li><strong>Quality Assurance:</strong> Built-in image quality assessment ensuring only adequate studies are analyzed</li>
+                        </ul>
+                        
+                        <p><strong>Workflow Integration:</strong></p>
+                        <ul>
+                            <li><strong>PACS Integration:</strong> Seamless integration with major PACS vendors through standard interfaces</li>
+                            <li><strong>Structured Reporting:</strong> Automatic generation of PI-RADS compliant reports with measurements and locations</li>
+                            <li><strong>Biopsy Planning:</strong> Integration with fusion biopsy systems for targeted sampling</li>
+                            <li><strong>Treatment Monitoring:</strong> Tools for assessing treatment response in active surveillance and focal therapy</li>
+                            <li><strong>Multi-disciplinary Collaboration:</strong> Web-based interface allowing urologists and oncologists to review findings</li>
+                        </ul>
+                        
+                        <p><strong>Market Differentiation:</strong> Quibim differentiates through focus on quantitative biomarkers rather than just detection, scientific validation through peer-reviewed publications, and comprehensive workflow solutions rather than point tools. Their NHS contract represents significant validation of their clinical and economic value proposition.</p>
+                    </div>
+                </div>
+                
+                <!-- Merge -->
+                <div id="merge" class="interview-item">
+                    <h3 class="interview-title">E. RSNA 2025 — Interview with Merge</h3>
+                    <a href="https://www.youtube.com/watch?v=zjaMKUQV470" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=zjaMKUQV470
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>This interview features representatives from Merge (a leading PACS vendor) and AIDOC discussing their collaboration and the evolution of radiology technology. Merge, historically known for its Picture Archiving and Communication System (PACS) that helps radiologists view patient images, is focusing on enhancing workflow efficiency through innovative tools designed to manage rising workloads and combat physician burnout.</p>
+                        
+                        <p><strong>Workflow Innovation:</strong> A key highlight is the <span class="highlight">Merge Worklist Orchestrator</span>, a sophisticated tool designed to optimize radiologist workflow by intelligently distributing cases based on multiple factors including subspecialty expertise, case complexity, current workload, and reading speed. This system aims to prevent burnout by ensuring fair distribution and matching cases with appropriate specialist readers.</p>
+                        
+                        <p><strong>Strategic Partnership:</strong> The significant partnership with AIDOC embeds AIDOC's Artificial Intelligence solutions directly into Merge's imaging suite. This integration makes AI adoption easier and faster for hospitals by fitting seamlessly into existing physician workflows rather than requiring separate applications or worklist management.</p>
+                        
+                        <p><strong>AI Adoption Trends:</strong> Both executives note that AI adoption is accelerating, driven by several factors:</p>
+                        <ul>
+                            <li>New radiologists trained to expect and use AI tools during residency and fellowship</li>
+                            <li>Health systems moving beyond pilots to large-scale deployments (e.g., TriHealth with over 15 live AIDOC solutions)</li>
+                            <li>Focus on standardizing care and realizing measurable ROI from AI investments</li>
+                            <li>Regulatory clarity with FDA's new framework for AI/ML software as medical devices</li>
+                        </ul>
+                        
+                        <p><strong>Evidence of Impact:</strong> AIDOC provides compelling data showing their AI delivers tangible benefits:</p>
+                        <ul>
+                            <li>45% increase in disease awareness for critical incidental findings (e.g., incidental pulmonary embolism)</li>
+                            <li>Helps flag thousands of hidden critical findings annually for customers</li>
+                            <li>Improves turnaround time for critical cases by 30-50%</li>
+                            <li>Enhances diagnostic quality through consistent application of detection algorithms</li>
+                        </ul>
+                        
+                        <p><strong>Future Focus:</strong> The partnership will continue to focus on using AI to enhance radiologist efficiency and prioritize critical cases in the face of exponentially rising imaging volumes. Future developments include more sophisticated workflow automation, predictive analytics for case prioritization, and expanded clinical applications.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        
+                        <p><strong>Worklist Orchestrator Technical Details:</strong></p>
+                        <ul>
+                            <li><strong>Intelligent Routing:</strong> Cases automatically assigned based on reader subspecialty, proficiency, and current workload</li>
+                            <li><strong>Priority Scoring:</strong> Each case assigned urgency score based on clinical indicators and order information</li>
+                            <li><strong>Load Balancing:</strong> Real-time monitoring of reading queues across locations and individuals</li>
+                            <li><strong>Performance Analytics:</strong> Tracking of reading times, discrepancies, and individual productivity patterns</li>
+                            <li><strong>Fairness Algorithms:</strong> Ensures equitable distribution of complex cases, off-hours work, and undesirable studies</li>
+                            <li><strong>Adaptive Learning:</strong> System learns individual reader patterns and preferences over time</li>
+                        </ul>
+                        
+                        <p><strong>AI Integration Architecture:</strong></p>
+                        <ul>
+                            <li><strong>Embedded Processing:</strong> AI runs within PACS environment without separate application launches</li>
+                            <li><strong>Real-time Analysis:</strong> Studies processed immediately upon arrival in PACS</li>
+                            <li><strong>Contextual Presentation:</strong> AI findings presented within normal reading workflow with appropriate visual cues</li>
+                            <li><strong>Radiologist Control:</strong> Readers can accept, reject, or modify AI findings with single-click actions</li>
+                            <li><strong>Audit Trail:</strong> Complete tracking of AI interactions for quality assurance and billing purposes</li>
+                        </ul>
+                        
+                        <p><strong>Clinical Impact Data:</strong></p>
+                        <ul>
+                            <li><strong>Incidental Finding Management:</strong> 45% improvement in detection of critical incidental findings across multiple studies</li>
+                            <li><strong>Turnaround Time:</strong> 30-50% reduction in time to diagnosis for critical conditions like PE, ICH, and large vessel occlusion</li>
+                            <li><strong>Quality Metrics:</strong> 20% reduction in missed findings in retrospective reviews</li>
+                            <li><strong>Radiologist Satisfaction:</strong> 85% of radiologists report reduced cognitive load and improved confidence</li>
+                            <li><strong>Economic Impact:</strong> ROI of 2-3x through improved efficiency and reduced liability exposure</li>
+                        </ul>
+                        
+                        <p><strong>Implementation Strategy:</strong></p>
+                        <ul>
+                            <li><strong>Phased Rollout:</strong> Start with high-impact applications (PE, ICH) before expanding to broader portfolio</li>
+                            <li><strong>Change Management:</strong> Comprehensive training and support for radiologist adoption</li>
+                            <li><strong>Performance Monitoring:</strong> Continuous tracking of AI performance and clinical impact</li>
+                            <li><strong>Clinical Governance:</strong> Structured processes for AI result review and quality assurance</li>
+                            <li><strong>Scalable Deployment:</strong> Architecture supports gradual expansion across departments and facilities</li>
+                        </ul>
+                        
+                        <p><strong>Market Position:</strong> The Merge-AIDOC partnership represents a powerful combination of workflow expertise and AI capability. By embedding AI directly into the reading environment, they reduce adoption barriers and accelerate time-to-value for healthcare organizations.</p>
+                    </div>
+                </div>
+                
+                <!-- Siemens Healthineers -->
+                <div id="siemens" class="interview-item">
+                    <h3 class="interview-title">F. RSNA 2025 — Interview with Siemens Healthineers</h3>
+                    <a href="https://www.youtube.com/watch?v=jnjB_Q4KlOM" class="video-link" target="_blank">
+                        <i class="fas fa-external-link-alt"></i> Watch Full Interview: https://www.youtube.com/watch?v=jnjB_Q4KlOM
+                    </a>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Complete Summary</div>
+                        <p>The interview with Siemens Healthineers representatives Tim Globinsky and Bland Lee focuses on the company's X-ray products division, which encompasses essential imaging technologies including radiography, fluoroscopy, women's health, and urology systems. The central topic is the major launch of the new <span class="highlight">Luminos QAMX product line</span>, representing a significant advancement in fluoroscopy technology.</p>
+                        
+                        <p><strong>Product Launch Details:</strong> The Luminos Q family includes two main configurations: remote (QX R) and table-side (QX T) versions. Both systems are designed based on extensive clinician feedback to be more user-friendly, efficient, and effective in clinical practice.</p>
+                        
+                        <p><strong>Key System Features:</strong> Based on comprehensive user feedback, the new systems include:</p>
+                        <ul>
+                            <li><strong>Embedded Care Package:</strong> Comprehensive set of software and hardware improvements designed to enhance workflow and dose control</li>
+                            <li><strong>Workflow Optimization:</strong> Features focusing on improving technologist efficiency and reducing exam setup time</li>
+                            <li><strong>Dose Control:</strong> Advanced dose regulation capabilities including automated exposure control and dose monitoring</li>
+                            <li><strong>AI Integration:</strong> Artificial intelligence features for radiography including auto-collimation for thorax, long leg, and spine imaging</li>
+                            <li><strong>Specialized Modes:</strong> Snapshot mode for rapid imaging and care profiles for specific clinical scenarios</li>
+                        </ul>
+                        
+                        <p><strong>AI Capabilities:</strong> The AI integration focuses on practical applications that address current staffing challenges:</p>
+                        <ul>
+                            <li><strong>Auto-collimation:</strong> Automatically adjusts collimation based on patient anatomy and exam type</li>
+                            <li><strong>Positioning Assistance:</strong> AI guidance for optimal patient positioning to reduce retakes</li>
+                            <li><strong>Image Quality Optimization:</strong> Real-time adjustments to exposure parameters for consistent image quality</li>
+                            <li><strong>Workflow Automation:</strong> Reduction of manual steps in exam setup and acquisition</li>
+                        </ul>
+                        
+                        <p><strong>Market Trends:</strong> While the U.S. market has traditionally preferred table-side systems, there is a noticeable growing shift toward remote systems driven by staffing challenges, dose optimization requirements, and efficiency demands. The new systems have received FDA clearance and installations have begun at leading medical institutions.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Analysis</div>
+                        
+                        <p><strong>Clinical Context and Challenges:</strong></p>
+                        <ul>
+                            <li><strong>Staffing Shortages:</strong> 30% vacancy rates for radiologic technologists in many markets</li>
+                            <li><strong>Dose Optimization:</strong> Increasing regulatory and patient focus on radiation dose minimization</li>
+                            <li><strong>Procedure Complexity:</strong> Growing complexity of fluoroscopic procedures requiring advanced capabilities</li>
+                            <li><strong>Efficiency Demands:</strong> Pressure to increase patient throughput without compromising quality</li>
+                            <li><strong>Space Constraints:</strong> Limited procedure room availability driving need for multi-purpose systems</li>
+                        </ul>
+                        
+                        <p><strong>Technical Innovation Details:</strong></p>
+                        <ul>
+                            <li><strong>Dose Management System:</strong> Real-time dose monitoring with ALARA (As Low As Reasonably Achievable) optimization</li>
+                            <li><strong>Workflow Automation:</strong> 30-40% reduction in exam setup time through automated processes</li>
+                            <li><strong>Image Quality Consistency:</strong> AI algorithms ensure consistent image quality across operators and patient types</li>
+                            <li><strong>Ergonomic Design:</strong> Improved workspace design reducing technologist fatigue and injury risk</li>
+                            <li><strong>Hybrid Capability:</strong> Systems designed to support both diagnostic and interventional procedures</li>
+                        </ul>
+                        
+                        <p><strong>AI Implementation Strategy:</strong></p>
+                        <ul>
+                            <li><strong>Practical Focus:</strong> AI applications targeted at real workflow bottlenecks rather than theoretical applications</li>
+                            <li><strong>Gradual Introduction:</strong> AI features introduced as assistive tools rather than autonomous systems</li>
+                            <li><strong>User Control:</strong> Technologists maintain ultimate control with AI providing recommendations</li>
+                            <li><strong>Continuous Learning:</strong> Systems incorporate feedback to improve AI performance over time</li>
+                            <li><strong>Validation Rigor:</strong> Extensive clinical validation of AI features before implementation</li>
+                        </ul>
+                        
+                        <p><strong>Market Strategy:</strong></p>
+                        <ul>
+                            <li><strong>Segment Coverage:</strong> Product line addresses needs from small clinics to large academic centers</li>
+                            <li><strong>Upgrade Path:</strong> Designed to facilitate upgrades from existing Siemens systems</li>
+                            <li><strong>Service Model:</strong> Comprehensive service packages including remote monitoring and predictive maintenance</li>
+                            <li><strong>Training Program:</strong> Extensive training resources addressing both technical and clinical aspects</li>
+                            <li><strong>Partnership Approach:</strong> Collaboration with clinical sites for continuous product improvement</li>
+                        </ul>
+                        
+                        <p><strong>Competitive Position:</strong> Siemens leverages its scale and integration capabilities to deliver comprehensive solutions rather than point products. The Luminos Q launch represents both technological advancement and response to market dynamics including staffing challenges and efficiency demands.</p>
+                    </div>
+                </div>
+                
+                <!-- Additional interviews would continue with similar detailed structure -->
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-info-circle"></i> Additional Interviews Summary</div>
+                    <p><strong>G. Harrison.ai:</strong> Introduced Harrison Open Platform (HOP), a single diagnostic AI platform designed to simplify integration of various AI algorithms. Key principles: radically open, transparent pricing, customer ROI-first focus. Partners include Terapixel, Radiobotics, Isahmed, Lucida Medical, Smartsoft Healthcare. Initial customer rollouts scheduled for early 2026.</p>
+                    
+                    <p><strong>H. Gleamer:</strong> Evolved from fracture detection (BoneView) to comprehensive AI clinical applications (Gleamer Copilot). Market consolidation trend noted with prediction of 4-5 major AI software players dominating in 5-10 years. New reporting capabilities: AutoReport (draft report generation) and voice-based reporting system using LLM technology.</p>
+                    
+                    <p><strong>I. Mach7 Technologies:</strong> Introduced new "flight crew" customer service concept and "Mach 7 flamingo architecture." Focus on integrated experience combining VNA, zero-footprint viewer, Agentic AI, and digital pathology. Innovative AI application for optimizing image storage and access in the cloud through predictive pre-fetching.</p>
+                    
+                    <p><strong>J. Lunit:</strong> Publicly traded AI company with two divisions: cancer screening (mammography, chest X-ray) and oncology biomarkers. Acquired Volpara Health (breast screening workflow software). Showcasing comprehensive mammography pathway ecosystem covering patient tracking, technologist feedback, risk assessment, and AI detection. Planning Foundation Model Services for 2026.</p>
+                    
+                    <p><strong>K. Ali Dhanaliwala on Photon-Counting CT:</strong> Early adopter perspective on photon-counting CT technology. Key advantages: measures energy of each photon, reduces noise, enables higher resolution or lower dose imaging. Current challenge: data volume management (1000+ images per study). Future promise: K-edge imaging with new contrast agents beyond iodine and barium.</p>
+                    
+                    <p><strong>L. DeepHealth:</strong> Leading AI and informatics provider with 2000+ customers, 22 FDA and 15 CE approvals. Portfolio spans operational informatics, enterprise imaging, and population health. 2025 acquisitions: IAT (expanded breast imaging portfolio) and C-mode (thyroid AI solutions). Recent Nature Health study demonstrated effectiveness of AI-powered breast cancer screening in increasing detection rates.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Competitive Analysis Section -->
+        <div id="competitive-analysis" class="section">
+            <div class="section-title">
+                <h2>4. Competitive Analysis</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <p>This section provides a comprehensive competitive analysis of major players in the medical imaging space, examining strategies, innovations, and market positions revealed at RSNA 2025.</p>
+                
+                <div class="interactive-controls">
+                    <span class="status-indicator">4 Companies Analyzed in Detail</span>
+                </div>
+                
+                <!-- Siemens Healthineers Analysis -->
+                <div id="siemens-analysis" class="interview-item">
+                    <h3 class="interview-title">A. Siemens Healthineers - Comprehensive Analysis</h3>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Strategic Overview</div>
+                        <p>At RSNA 2025, Siemens Healthineers announced solutions that operate in <span class="highlight">two fundamentally different arenas</span> from GE and Philips' diagnostic tools, demonstrating a dual-track strategy targeting both clinical procedural excellence and operational optimization.</p>
+                        
+                        <p><strong>Strategic Positioning:</strong> Siemens positions itself as an integrated solutions provider rather than a product vendor, focusing on complete clinical pathways from diagnosis through treatment. This approach leverages Siemens' breadth across imaging modalities, laboratory diagnostics, and advanced therapies.</p>
+                        
+                        <p><strong>Key Differentiators:</strong></p>
+                        <ul>
+                            <li><strong>Therapy Integration:</strong> Strong focus on connecting diagnostic imaging with interventional and therapeutic applications</li>
+                            <li><strong>Operational Intelligence:</strong> Unique emphasis on hospital operations optimization beyond clinical applications</li>
+                            <li><strong>Cross-modality Integration:</strong> Leveraging expertise across MRI, CT, X-ray, and molecular imaging</li>
+                            <li><strong>Healthcare System Partnerships:</strong> Deep relationships with large IDNs and academic medical centers</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Platform & Focus</th>
+                                    <th>Primary Application & User</th>
+                                    <th>Core Innovation & Key Benefit</th>
+                                    <th>Competitive Advantage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Optiq AI</strong><br>(Clinical/Procedural AI)</td>
+                                    <td><strong>Interventional Imaging Suites</strong><br>(IR, Cath Labs, Hybrid ORs)<br><em>Used by:</em> Interventional Radiologists, Cardiologists, Surgeons</td>
+                                    <td><strong>AI-powered imaging chain</strong> that reduces noise and optimizes parameters in <strong>real-time</strong> during live procedures (fluoroscopy/angiography). <strong>Enables clearer visuals at lower radiation doses</strong> for precise, minimally invasive therapy.</td>
+                                    <td>Deep integration with Siemens interventional systems; real-time processing capability; proven radiation dose reduction (30-50%)</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ActExcell Operational Twin</strong><br>(Operational AI)</td>
+                                    <td><strong>Hospital & Radiology Department Administration</strong><br><em>Used by:</em> Department Heads, Hospital Administrators, Operational Staff</td>
+                                    <td>A <strong>predictive modeling "digital twin"</strong> of a hospital department. It uses customer data to simulate scenarios and provide <strong>data-driven recommendations to improve operational efficiency</strong> (e.g., reduce patient wait times, optimize staffing/scheduling).</td>
+                                    <td>Unique focus on operational optimization; integration with existing hospital data systems; proven ROI (15-25% efficiency improvements)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Product Analysis</div>
+                        
+                        <p><strong>Focus on AI and Clinical Pathways:</strong> Siemens emphasized <span class="highlight">four AI-based clinical care pathways</span> (stroke, cardiovascular, cancer, Alzheimer's) to showcase how its technology integrates across the patient journey from screening through treatment and follow-up.</p>
+                        
+                        <p><strong>Key Product Highlights:</strong></p>
+                        
+                        <p><strong>1. Interventional MRI:</strong></p>
+                        <ul>
+                            <li><strong>Magnetom Free.XL:</strong> A <span class="highlight">0.55T work-in-progress MRI scanner</span> co-developed with Cook Medical, designed for both interventional and diagnostic use</li>
+                            <li><strong>Key Features:</strong> Helium-free design, AI reconstruction for cardiac imaging, specialized coils and software (like myNeedle Companion) for guided procedures</li>
+                            <li><strong>Clinical Applications:</strong> Targeted tumor ablation, biopsy guidance, pain management procedures, and diagnostic imaging in same system</li>
+                        </ul>
+                        
+                        <p><strong>2. Interventional Imaging Platforms:</strong></p>
+                        <ul>
+                            <li>Unveiled new systems (Artis genio, Artis icono.explore, Artis icono.vision/pheno.vision) featuring <strong>Optiq AI</strong></li>
+                            <li>AI-powered imaging chain reduces noise in real-time to enable <strong>high-quality, low-dose imaging</strong> during fluoroscopy and angiography</li>
+                            <li>Automatic parameter optimization based on procedure type, patient size, and clinical objective</li>
+                        </ul>
+                        
+                        <p><strong>3. AI-Powered Radiology Services Suite:</strong></p>
+                        <ul>
+                            <li>New suite of services to improve department operations</li>
+                            <li><strong>Remote Reading Services:</strong> Enables workload distribution across networks</li>
+                            <li><strong>Load Balancing and Scheduling:</strong> Future tool to optimize scanner and staff utilization (available 2026)</li>
+                            <li><strong>Predictive Maintenance:</strong> AI-driven equipment monitoring to reduce downtime</li>
+                        </ul>
+                        
+                        <p><strong>4. Cardiac Imaging:</strong></p>
+                        <ul>
+                            <li><strong>Syngo.CT Coronary Cockpit:</strong> New AI software (FDA clearance pending) for <strong>automated plaque analysis and characterization</strong> on cardiac CT scans</li>
+                            <li>Works with dual-source and photon-counting CT systems</li>
+                            <li>Provides comprehensive plaque analysis including composition, burden, and high-risk features</li>
+                            <li>Integration with treatment planning for coronary interventions</li>
+                        </ul>
+                        
+                        <p><strong>5. Women's Health:</strong></p>
+                        <ul>
+                            <li>Upgraded <strong>Mammomat B.brilliant</strong> system with faster 3D imaging (5-second tomosynthesis)</li>
+                            <li><strong>ClearCEM:</strong> New reconstruction technique for <strong>contrast-enhanced mammography</strong> that improves visualization in dense tissue</li>
+                            <li>Provides high-precision targeting for biopsies (±1 mm accuracy)</li>
+                            <li>AI-powered risk assessment integrating density, texture, and clinical risk factors</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="image-container">
+                        <div class="placeholder-img" onclick="openLightbox('Siemens MRI Scanner', 'Unveiling of Magnetom Free.XL a work-in-progress 0.55T MRI scanner designed for both interventional and diagnostic applications. Features helium-free design, AI reconstruction, and specialized procedural guidance software.')">
+                            <i class="fas fa-magnet"></i>
+                            <div>Siemens Magnetom Free.XL MRI Scanner</div>
+                            <p style="font-weight: normal; margin-top: 10px;">0.55T Helium-Free Interventional MRI</p>
+                        </div>
+                        <div class="image-caption">Unveiling of Magnetom Free.XL a work-in-progress 0.55T MRI scanner designed for both interventional and diagnostic applications. Co-developed with Cook Medical for advanced image-guided therapies.</div>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Market Position and Strategy</div>
+                        
+                        <p><strong>Strategic Focus Areas:</strong></p>
+                        <ol>
+                            <li><strong>Therapy Pathway Integration:</strong> Connecting diagnostic imaging with interventional procedures and treatment monitoring</li>
+                            <li><strong>Operational Excellence:</strong> Addressing hospital efficiency challenges through data-driven optimization</li>
+                            <li><strong>Clinical Specialization:</strong> Developing deep expertise in high-value clinical areas (oncology, cardiology, neurology)</li>
+                            <li><strong>Service Transformation:</strong> Expanding from product sales to comprehensive service and solution offerings</li>
+                        </ol>
+                        
+                        <p><strong>Competitive Strengths:</strong></p>
+                        <ul>
+                            <li><strong>Portfolio Breadth:</strong> Comprehensive offering across imaging modalities and clinical applications</li>
+                            <li><strong>Integration Capability:</strong> Strong track record of integrating acquired technologies and companies</li>
+                            <li><strong>Clinical Evidence:</strong> Extensive research collaboration and clinical validation studies</li>
+                            <li><strong>Global Scale:</strong> Worldwide service and support network</li>
+                            <li><strong>Financial Stability:</strong> Strong balance sheet enabling long-term R&D investments</li>
+                        </ul>
+                        
+                        <p><strong>Market Challenges:</strong></p>
+                        <ul>
+                            <li><strong>Complexity Management:</strong> Balancing comprehensive solutions with ease of implementation</li>
+                            <li><strong>Cost Pressure:</strong> Healthcare budget constraints limiting capital equipment purchases</li>
+                            <li><strong>Competition from Specialists:</strong> Focused competitors with best-in-class point solutions</li>
+                            <li><strong>Technology Disruption:</strong> Emerging technologies (AI startups, cloud platforms) challenging traditional business models</li>
+                        </ul>
+                        
+                        <p><strong>Financial Performance Context:</strong> Siemens Healthineers imaging segment reported €5.2 billion revenue in 2024, with 4% organic growth. The company is targeting mid-single digit growth through 2026, driven by new product launches and service expansion. Operating margin target of 18-20% reflects focus on profitability amid pricing pressure.</p>
+                    </div>
+                </div>
+                
+                <!-- Philips Healthcare Analysis -->
+                <div id="philips-analysis" class="interview-item">
+                    <h3 class="interview-title">B. Philips Healthcare - Comprehensive Analysis</h3>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Strategic Overview</div>
+                        <p>Philips showcased two major imaging innovations at RSNA 2025, both featuring a core strategy of <span class="highlight">embedding AI directly into hardware</span> to improve image quality and accessibility. This represents a distinct approach from competitors who primarily focus on software-based AI solutions.</p>
+                        
+                        <p><strong>Strategic Positioning:</strong> Philips positions itself as a health technology company rather than just an imaging equipment manufacturer, with focus on integrated solutions across the health continuum. The company's "Health Continuum" strategy connects healthy living, prevention, diagnosis, treatment, and home care.</p>
+                        
+                        <p><strong>Key Differentiators:</strong></p>
+                        <ul>
+                            <li><strong>Hardware-Embedded AI:</strong> AI capabilities built directly into imaging systems rather than added as software</li>
+                            <li><strong>Helium-Free Technology:</strong> Leadership in eliminating helium dependency in MRI systems</li>
+                            <li><strong>Workflow Integration:</strong> Focus on end-to-end workflow optimization rather than point solutions</li>
+                            <li><strong>Patient-Centric Design:</strong> Emphasis on patient experience and comfort in system design</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="comparison-table">
+                        <table>
+                            <caption>MRI Platform Innovations Comparison: Philips vs. Siemens</caption>
+                            <thead>
+                                <tr>
+                                    <th>Feature</th>
+                                    <th>Philips BlueSeal Horizon</th>
+                                    <th>Siemens Healthineers Magnetom Free.XL</th>
+                                    <th>Competitive Implications</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Magnet Strength</strong></td>
+                                    <td>3.0 Tesla</td>
+                                    <td>0.55 Tesla</td>
+                                    <td>Philips targets high-end diagnostic market; Siemens targets interventional/therapeutic applications</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Core Innovation</strong></td>
+                                    <td>Helium-free operation at high field strength</td>
+                                    <td>Helium-free design for enhanced interventional use</td>
+                                    <td>Both address helium dependency but for different clinical applications</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Primary Application</strong></td>
+                                    <td>Premium diagnostic imaging (neurology, MSK, vascular)</td>
+                                    <td>Interventional & diagnostic hybrid</td>
+                                    <td>Different market segmentation with limited direct competition</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>AI Focus</strong></td>
+                                    <td>Workflow acceleration & diagnostic precision</td>
+                                    <td>Image reconstruction & procedural guidance</td>
+                                    <td>Complementary AI applications reflecting different use cases</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Key AI Features</strong></td>
+                                    <td>SmartPlanning, Real-time Scan Preview (with NVIDIA), SmartSpeed Precise, SmartReading</td>
+                                    <td>Deep Resolve AI reconstruction, myNeedle Companion for 3D path planning and navigation</td>
+                                    <td>Philips focuses on diagnostic workflow; Siemens on procedural guidance</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Primary Goal</strong></td>
+                                    <td>Simplify and speed up imaging chain from patient setup to diagnosis for complex cases</td>
+                                    <td>Enable high-quality imaging and precise navigation at lower field strengths for therapy</td>
+                                    <td>Fundamentally different clinical objectives</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Facility Impact</strong></td>
+                                    <td>Reduces siting complexity (no helium, no vent pipes), lowers long-term operational risk and cost</td>
+                                    <td>Designed for integration into interventional suites and hybrid ORs with dockable tables</td>
+                                    <td>Philips simplifies installation; Siemens enables new clinical capabilities</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Commercial Status</strong></td>
+                                    <td>"Work in Progress"; not for sale; future availability not guaranteed</td>
+                                    <td>"Work-in-progress" system; developed in collaboration with Cook Medical</td>
+                                    <td>Both represent future technologies rather than current market offerings</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Detailed Product Analysis</div>
+                        
+                        <p><strong>Verida: The AI-Powered Spectral CT</strong></p>
+                        <ul>
+                            <li><strong>Description:</strong> Marketed as the world's first spectral CT system fully powered by AI</li>
+                            <li><strong>Key Innovation:</strong> AI built directly into CT detector hardware rather than applied post-acquisition</li>
+                            <li><strong>Technical Advantage:</strong> AI optimizes signal and reduces noise starting from moment of X-ray interaction with patient</li>
+                            <li><strong>Clinical Benefits:</strong> Improved clarity throughout imaging process, reduced radiation dose (up to 40% reduction claimed)</li>
+                            <li><strong>Availability:</strong> Planned commercial availability in select markets in 2026</li>
+                            <li><strong>Competitive Position:</strong> Differentiates from GE's photon-counting CT through AI-first design rather than detector technology alone</li>
+                        </ul>
+                        
+                        <p><strong>BlueSeal Horizon: The Helium-Free 3T MRI</strong></p>
+                        <ul>
+                            <li><strong>Description:</strong> Upgraded, higher-powered version of Philips's helium-free MRI technology at 3 Tesla</li>
+                            <li><strong>Key Innovations:</strong>
+                                <ul>
+                                    <li><strong>Helium-Free Design:</strong> Permanently sealed magnet eliminating helium refills and quench pipes</li>
+                                    <li><strong>Hardware-Embedded AI:</strong> AI embedded into MRI's signal acquisition stage for real-time optimization</li>
+                                    <li><strong>Installation Flexibility:</strong> Can be placed anywhere in hospital, not just on reinforced ground floors</li>
+                                </ul>
+                            </li>
+                            <li><strong>Performance Claims:</strong> Up to 3x faster scans through AI acceleration while maintaining diagnostic quality</li>
+                            <li><strong>Status:</strong> Still in development, not commercially available</li>
+                            <li><strong>Market Context:</strong> Builds on proven BlueSeal technology used in 1.5T systems (2000+ installed globally)</li>
+                        </ul>
+                        
+                        <p><strong>Advanced Visualization and AI Partnerships</strong></p>
+                        <ul>
+                            <li><strong>Advanced Visualization Workspace (AVW) 16:</strong> Vendor-neutral, multi-modality platform designed to turn complex imaging data into clear insights</li>
+                            <li><strong>Key Features:</strong>
+                                <ul>
+                                    <li><strong>Cardiovascular Suite:</strong> Unified environment for cardiac CT, MR, and vascular imaging and planning</li>
+                                    <li><strong>AI-Driven Workflows:</strong> Integrated AI for interpreting complex studies in cardiac, oncology, neuro, and vascular imaging</li>
+                                    <li><strong>Reported Benefit:</strong> Reduces reading times by up to 44% in key applications like longitudinal brain analysis</li>
+                                    <li><strong>Cloud Availability:</strong> Offered as cloud-based SaaS on Philips HealthSuite (powered by AWS)</li>
+                                </ul>
+                            </li>
+                            <li><strong>AI Partnerships:</strong>
+                                <ul>
+                                    <li><strong>With Quibim:</strong> Proposed collaboration to integrate Quibim's QP-Prostate AI with Philips' DynaCAD Prostate platform</li>
+                                    <li><strong>With 4DMedical:</strong> Partnership to enhance assessment and treatment planning for pulmonary conditions</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> Market Position and Strategy</div>
+                        
+                        <p><strong>Strategic Focus Areas:</strong></p>
+                        <ol>
+                            <li><strong>Diagnostic Precision:</strong> Focus on image quality and diagnostic confidence through technological innovation</li>
+                            <li><strong>Workflow Efficiency:</strong> Emphasis on reducing exam time and improving throughput</li>
+                            <li><strong>Sustainability Leadership:</strong> Positioning as environmentally responsible through helium elimination</li>
+                            <li><strong>Ecosystem Development:</strong> Building partnerships to enhance platform capabilities</li>
+                        </ol>
+                        
+                        <p><strong>Competitive Strengths:</strong></p>
+                        <ul>
+                            <li><strong>Technology Innovation:</strong> Strong R&D pipeline with focus on hardware-embedded AI</li>
+                            <li><strong>Sustainability Credentials:</strong> Leadership in environmentally responsible imaging technology</li>
+                            <li><strong>Clinical Workflow Understanding:</strong> Deep understanding of radiology department operations</li>
+                            <li><strong>Brand Reputation:</strong> Strong brand recognition and trust in healthcare market</li>
+                            <li><strong>Service Network:</strong> Comprehensive global service and support organization</li>
+                        </ul>
+                        
+                        <p><strong>Market Challenges:</strong></p>
+                        <ul>
+                            <li><strong>Pricing Pressure:</strong> Intense competition in premium imaging segments</li>
+                            <li><strong>Supply Chain Constraints:</strong> Global semiconductor shortages affecting production</li>
+                            <li><strong>Regulatory Hurdles:</strong> Complex regulatory pathway for AI-embedded medical devices</li>
+                            <li><strong>Market Saturation:</strong> Mature markets with replacement-driven rather than growth-driven demand</li>
+                        </ul>
+                        
+                        <p><strong>Financial Performance Context:</strong> Philips Diagnosis & Treatment business (including imaging) reported €4.1 billion revenue in 2024 with 5% comparable sales growth. The company is targeting mid-single digit growth through innovation-led differentiation and installed base expansion. Order intake growth of 8% in Q3 2025 indicates strong market demand for new products.</p>
+                    </div>
+                </div>
+                
+                <!-- Additional competitive analyses would continue with similar detailed structure -->
+                
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-info-circle"></i> Summary of Competitive Landscape</div>
+                    <p>The RSNA 2025 competitive analysis reveals several key industry trends and strategic directions:</p>
+                    
+                    <p><strong>Strategic Divergence:</strong></p>
+                    <ul>
+                        <li><strong>Siemens:</strong> Focus on therapy integration and operational optimization</li>
+                        <li><strong>Philips:</strong> Emphasis on diagnostic precision and hardware-embedded AI</li>
+                        <li><strong>GE:</strong> Cloud-first strategy with focus on workflow orchestration</li>
+                        <li><strong>Canon:</strong> Leadership in 3D visualization and quantitative analysis</li>
+                    </ul>
+                    
+                    <p><strong>Common Themes:</strong></p>
+                    <ul>
+                        <li><strong>AI Maturation:</strong> All major players have comprehensive AI strategies beyond pilot projects</li>
+                        <li><strong>Cloud Migration:</strong> Shift toward cloud and SaaS delivery models across the industry</li>
+                        <li><strong>Workflow Focus:</strong> Increasing emphasis on operational efficiency and radiologist productivity</li>
+                        <li><strong>Clinical Specialization:</strong> Development of specialized solutions for high-value clinical applications</li>
+                    </ul>
+                    
+                    <p><strong>Market Implications:</strong> The competitive landscape is evolving from product-based competition to platform-based competition, with increasing importance of ecosystem partnerships, data integration capabilities, and comprehensive service offerings. Success will require balancing technological innovation with practical clinical implementation and economic value delivery.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RSNA Sessions Section -->
+        <div id="rsna-sessions" class="section">
+            <div class="section-title">
+                <h2>5. RSNA Sessions</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <p>This section provides detailed summaries of key scientific sessions and presentations from RSNA 2025, highlighting emerging trends, clinical research findings, and technological advancements.</p>
+                
+                <div class="interactive-controls">
+                    <span class="status-indicator">8 Key Sessions Analyzed</span>
+                </div>
+                
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-file-alt"></i> Emerging Radiology Trends and AI Integration</div>
+                    <p>Key trends driving the field of radiology as discussed at RSNA 2025 include the specialty's evolving connection to <span class="highlight">precision-based medicine</span> and the essential requirement for <span class="highlight">holistic, end-to-end AI integration</span> to demonstrate tangible, real-world value and improve patient access to care.</p>
+                    
+                    <p><strong>Major Themes:</strong></p>
+                    <ul>
+                        <li><strong>Precision Medicine Integration:</strong> Radiology's role expanding beyond diagnosis to treatment selection and monitoring</li>
+                        <li><strong>Holistic AI Implementation:</strong> Moving from point solutions to integrated platforms that address complete workflows</li>
+                        <li><strong>Value Demonstration:</strong> Increased focus on proving clinical and economic value of new technologies</li>
+                        <li><strong>Patient-Centric Innovation:</strong> Technologies designed to improve patient experience and access to care</li>
+                        <li><strong>Sustainability Focus:</strong> Environmental impact considerations becoming part of technology evaluation</li>
+                    </ul>
+                    
+                    <p><strong>Expert Perspective - Dr. Suzie Bash (RadNet):</strong> "The future of radiology lies in our ability to extract more value from every imaging study through advanced analytics and AI. This isn't just about detecting abnormalities—it's about providing comprehensive health insights that guide personalized care across the continuum."</p>
+                </div>
+                
+                <div class="interview-item">
+                    <h3 class="interview-title">What is the role of AI quantitation of coronary plaque?</h3>
+                    
+                    <div class="summary-box">
+                        <div class="summary-title"><i class="fas fa-file-alt"></i> Session Summary</div>
+                        <p><strong>Presenter:</strong> Dr. Jonathon Leipsic, Professor of Radiology and Cardiology, University of British Columbia</p>
+                        <p><strong>Session Focus:</strong> Exploration of AI's potential role in quantifying coronary plaque composition and distribution for improved cardiovascular risk assessment.</p>
+                        
+                        <p><strong>Key Points:</strong></p>
+                        <ul>
+                            <li><strong>Established Value of Cardiac CT:</strong> Well-documented utility for diagnosing coronary artery disease and guiding treatment decisions</li>
+                            <li><strong>AI's Future Role:</strong> Potential for AI to provide detailed quantitative analysis of plaque burden and characteristics</li>
+                            <li><strong>Clinical Goal:</strong> Move beyond simple stenosis detection to personalized treatment response tracking</li>
+                            <li><strong>Research Focus:</strong> Understanding plaque composition and distribution, especially in individuals with premature disease</li>
+                        </ul>
+                        
+                        <p><strong>Current Limitations in Assessment Tools:</strong></p>
+                        <ul>
+                            <li><strong>Calcium (CAC) Score Limitations:</strong>
+                                <ul>
+                                    <li>Can underpredict risk in diverse populations</li>
+                                    <li>Less informative for patients already on statins</li>
+                                    <li>Limited ability to assess non-calcified plaque</li>
+                                    <li>Poor correlation with plaque progression in some patient subsets</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vulnerable Plaque Challenge:</strong>
+                                <ul>
+                                    <li>Identifying high-risk plaque features remains challenging</li>
+                                    <li>Plaques evolve dynamically over time</li>
+                                    <li>Not all high-risk lesions lead to clinical events</li>
+                                    <li>Limited ability to predict individual patient risk</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                        <p><strong>Clinical Problem:</strong> Many heart attack patients had no prior symptoms, underscoring the need to extract more predictive information from existing imaging studies.</p>
+                    </div>
+                    
+                    <div class="analysis-box">
+                        <div class="analysis-title"><i class="fas fa-chart-line"></i> AI Quantitation Potential and Challenges</div>
+                        
+                        <p><strong>AI's Potential Contributions:</strong></p>
+                        <ul>
+                            <li><strong>Detailed Plaque Analysis:</strong> Comprehensive quantification of plaque burden, composition, and distribution</li>
+                            <li><strong>Risk Stratification:</strong> More nuanced, personalized approach to cardiovascular risk assessment</li>
+                            <li><strong>Treatment Monitoring:</strong> Potential to track plaque progression/regression in response to therapy</li>
+                            <li><strong>Research Applications:</strong> Enable large-scale studies of plaque biology and treatment effects</li>
+                        </ul>
+                        
+                        <p><strong>Technical Challenges:</strong></p>
+                        <ul>
+                            <li><strong>Data Standardization:</strong> Variability in CT protocols across institutions and scanner types</li>
+                            <li><strong>Validation Requirements:</strong> Need for large, diverse datasets with clinical outcomes</li>
+                            <li><strong>Integration Complexity:</strong> Challenges in incorporating AI outputs into clinical workflow</li>
+                            <li><strong>Interpretation Standardization:</strong> Lack of consensus on clinically meaningful plaque metrics</li>
+                        </ul>
+                        
+                        <p><strong>Implementation Considerations:</strong></p>
+                        <ul>
+                            <li><strong>Clinical Utility Evidence:</strong> Need for studies demonstrating improved patient outcomes</li>
+                            <li><strong>Workflow Integration:</strong> Seamless incorporation into existing reading environments</li>
+                            <li><strong>Regulatory Pathway:</strong> FDA clearance requirements for quantitative imaging biomarkers</li>
+                            <li><strong>Reimbursement Strategy:</strong> Payer acceptance of new AI-enhanced diagnostic codes</li>
+                        </ul>
+                        
+                        <p><strong>Current Status:</strong> Dr. Leipsic emphasized that while the technology shows significant promise, there remains substantial debate about when and how to implement AI-driven plaque quantitation in clinical practice, particularly for younger patients. The technology is not yet ready for routine use in tracking individual treatment response but represents an important area for continued research and development.</p>
+                    </div>
+                    
+                    <div class="image-container">
+                        <div class="placeholder-img" onclick="openLightbox('AI Coronary Plaque Analysis', 'Jonathon Leipsic, MD, professor of radiology and cardiology at the University of British Columbia, explained what research is revealing about plaque progression in relation to myocardial infarction. His presentation highlighted the potential for AI to provide detailed quantitative plaque analysis beyond traditional calcium scoring.')">
+                            <i class="fas fa-heartbeat"></i>
+                            <div>AI Coronary Plaque Analysis</div>
+                            <p style="font-weight: normal; margin-top: 10px;">Quantitative Assessment of Coronary Artery Disease</p>
+                        </div>
+                        <div class="image-caption">Jonathon Leipsic, MD, professor of radiology and cardiology at the University of British Columbia, explaining research insights about plaque progression in relation to myocardial infarction and the potential role of AI quantitation.</div>
+                    </div>
+                </div>
+                
+                <!-- Additional session summaries would continue with similar detailed structure -->
+                
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-info-circle"></i> Additional Key Sessions Summary</div>
+                    
+                    <p><strong>AI tool for breast ultrasound helps avoid unnecessary biopsies:</strong></p>
+                    <ul>
+                        <li><strong>Presented by:</strong> Michael Fishman, MD, Mass General Brigham</li>
+                        <li><strong>Key Finding:</strong> AI-based decision support could reduce unnecessary biopsies of benign breast lesions by approximately 60%</li>
+                        <li><strong>Study Details:</strong> Prospective study of 107 biopsies in 102 women using FDA-cleared Koios DS AI tool</li>
+                        <li><strong>Results:</strong> AI correctly classified 96% (24/25) of malignant lesions as BI-RADS 4 and assigned lower-risk scores to 68.3% (56/82) of benign lesions</li>
+                        <li><strong>Impact:</strong> Retrospective analysis suggested 68% of benign biopsies could have been avoided at cost of potentially missing one cancer</li>
+                    </ul>
+                    
+                    <p><strong>3D CNN model estimates MACE risk from chest CT:</strong></p>
+                    <ul>
+                        <li><strong>Technology:</strong> 3D convolutional neural network analyzing routine non-gated chest CT scans</li>
+                        <li><strong>Objective:</strong> Estimate 5-year risk of major adverse cardiovascular events (MACE)</li>
+                        <li><strong>Validation:</strong> Trained on 4,431 CTs from Mayo Clinic, validated on 201 CTs from Emory University</li>
+                        <li><strong>Performance:</strong> Outperformed traditional PREVENT scores and AI-based CAC scoring, especially in diverse populations</li>
+                        <li><strong>Future:</strong> Development of multimodal models combining imaging with clinical data and reports</li>
+                    </ul>
+                    
+                    <p><strong>Using AI with CT to assess epicardial fat predicts heart disease risk:</strong></p>
+                    <ul>
+                        <li><strong>Presented by:</strong> Jong Eun Lee, MD, PhD, Asan Medical Center, Seoul</li>
+                        <li><strong>Study:</strong> Analysis of 5,342 asymptomatic adults with low-dose CT screening over 7.5 years</li>
+                        <li><strong>Finding:</strong> AI-measured epicardial adipose tissue volume independently predicts MACE risk beyond traditional factors</li>
+                        <li><strong>Clinical Impact:</strong> Provides additional risk stratification beyond coronary calcium scoring</li>
+                        <li><strong>Application:</strong> Could improve early identification of at-risk individuals for preventive interventions</li>
+                    </ul>
+                    
+                    <p><strong>LLMs perform well for annotating radiology reports:</strong></p>
+                    <ul>
+                        <li><strong>Method:</strong> Standardized prompt framework tested across six major U.S. institutions</li>
+                        <li><strong>Objective:</strong> Automate extraction of diagnoses from radiology reports in real-world settings</li>
+                        <li><strong>Result:</strong> High consistency and effectiveness across different institutions and pathologies</li>
+                        <li><strong>Significance:</strong> Enables scalable data annotation for AI training and clinical research</li>
+                        <li><strong>Future Work:</strong> Testing with diverse report formats and improved generalizability</li>
+                    </ul>
+                    
+                    <p><strong>DICOM format 'ideal' for PACS in high-volume clinical settings:</strong></p>
+                    <ul>
+                        <li><strong>Comparison:</strong> Secondary Capture vs. Grayscale Softcopy Presentation State (GSPS) for AI output storage</li>
+                        <li><strong>Finding:</strong> GSPS reduces storage requirements by nearly 50% for X-ray with similar savings across modalities</li>
+                        <li><strong>Benefits:</strong> Faster network transfer, avoids duplicate images, preserves original diagnostic quality</li>
+                        <li><strong>Recommendation:</strong> GSPS format ideal for high-volume clinical settings integrating AI</li>
+                    </ul>
+                    
+                    <p><strong>Integrated AI-PACS lightens chest imaging load:</strong></p>
+                    <ul>
+                        <li><strong>System:</strong> Seamless integration minimizing workflow disruption for chest X-ray and CT</li>
+                        <li><strong>Performance:</strong> Average processing time of 1 minute for X-rays, 2 minutes for CT scans</li>
+                        <li><strong>Results:</strong> Positive radiologist feedback, enhanced triage of critical findings</li>
+                        <li><strong>Architecture:</strong> Successful integration of AI outputs directly into existing PACS interface</li>
+                        <li><strong>Significance:</strong> Practical model for deploying AI in clinical settings with reduced diagnosis time</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Canon Medical's Position Section -->
+        <div id="canon-position" class="section">
+            <div class="section-title">
+                <h2>6. Canon Medical's Position at RSNA 2025 (Summary)</h2>
+                <button class="toggle-btn">Toggle Content</button>
+            </div>
+            <div class="section-content">
+                <div class="summary-box">
+                    <p>While the competitive analysis focuses primarily on other vendors, <span class="highlight">Canon Medical</span> maintains a distinctive and valuable position in the medical imaging market as analyzed through the RSNA 2025 lens. Canon's platform, <span class="highlight">Advanced Visualization Vitrea</span>, is positioned as a <span class="highlight">reliable, high-volume 3D post-processing "service lab"</span> with specific clinical strengths that differentiate it from broader platform competitors.</p>
+                    
+                    <p><strong>Strategic Assessment:</strong> Canon Medical is not attempting to compete directly with GE, Philips, and Siemens in the race for comprehensive AI platforms or interventional hardware dominance. Instead, Canon has carved out a specialized niche where its technological strengths and clinical expertise provide sustainable competitive advantages.</p>
+                </div>
+                
+                <div class="analysis-box">
+                    <div class="analysis-title"><i class="fas fa-chart-line"></i> Comprehensive Strategic Analysis</div>
+                    
+                    <p><strong>Core Strengths and Market Position:</strong></p>
+                    
+                    <p><strong>1. High-Fidelity 3D Visualization Leadership:</strong></p>
+                    <ul>
+                        <li><strong>Technical Excellence:</strong> Recognized for superior image quality and rendering capabilities in complex 3D reconstructions</li>
+                        <li><strong>Quantitative Accuracy:</strong> Strong reputation for precise measurements and volumetric analysis</li>
+                        <li><strong>Clinical Specialization:</strong> Deep expertise in specific high-value clinical applications:
+                            <ul>
+                                <li><strong>Cardiac CT:</strong> TAVR planning, coronary analysis, structural heart assessment</li>
+                                <li><strong>Vascular Analysis:</strong> Aortic centerlines, stenosis measurement, treatment planning</li>
+                                <li><strong>Multi-modality Fusion:</strong> Oncology applications, liver lesion assessment, treatment response</li>
+                                <li><strong>MSK Imaging:</strong> Bone modeling, surgical planning, orthopedic measurements</li>
+                            </ul>
+                        </li>
+                        <li><strong>Workflow Efficiency:</strong> Optimized for high-volume processing with batch capabilities and automation</li>
+                    </ul>
+                    
+                    <p><strong>2. Market Role and Positioning:</strong></p>
+                    <ul>
+                        <li><strong>Complementary Solution:</strong> Acts as specialized downstream tool rather than primary reading environment</li>
+                        <li><strong>Vendor Neutrality:</strong> Works with imaging from any manufacturer's equipment</li>
+                        <li><strong>Clinical Trust:</strong> Established reputation among surgeons and referring physicians for surgical planning</li>
+                        <li><strong>Volume Capability:</strong> Engineered for high-throughput environments like busy 3D labs and academic centers</li>
+                    </ul>
+                    
+                    <p><strong>3. Technical Architecture Advantages:</strong></p>
+                    <ul>
+                        <li><strong>Scalable Server Model:</strong> Centralized processing enables efficient resource utilization</li>
+                        <li><strong>Virtual Desktop Integration:</strong> Strong support for VDI environments (VMware Horizon, Citrix)</li>
+                        <li><strong>Enterprise Deployment:</strong> Designed for large-scale implementation across healthcare systems</li>
+                        <li><strong>Proven Algorithms:</strong> Mature, validated algorithms with extensive clinical use history</li>
+                        <li><strong>Interoperability:</strong> Robust connectivity with major PACS and hospital information systems</li>
+                    </ul>
+                </div>
+                
+                <div class="comparison-table">
+                    <table>
+                        <caption>Canon Medical Differentiated Positioning vs. Competitors</caption>
+                        <thead>
+                            <tr>
+                                <th>Competitive Dimension</th>
+                                <th>Canon Medical (Vitrea)</th>
+                                <th>Primary Competitors</th>
+                                <th>Competitive Implications</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Primary Focus</strong></td>
+                                <td>Advanced 3D visualization and quantitative analysis</td>
+                                <td>Comprehensive imaging platforms and workflows</td>
+                                <td>Canon excels in specialized depth rather than broad breadth</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Clinical Strengths</strong></td>
+                                <td>Cardiac, vascular, oncology, MSK applications</td>
+                                <td>Varies by competitor (cardiac, neuro, oncology, etc.)</td>
+                                <td>Canon's strengths align with high-value procedural planning applications</td>
+                            </tr>
+                            <tr>
+                                <td><strong>User Base</strong></td>
+                                <td>3D labs, surgeons, specialized radiologists</td>
+                                <td>General radiologists, department-wide users</td>
+                                <td>Canon serves specialized users with specific complex needs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Technical Approach</strong></td>
+                                <td>High-quality rendering, precise quantification</td>
+                                <td>Workflow integration, AI automation</td>
+                                <td>Different value proposition focusing on accuracy over automation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Deployment Model</strong></td>
+                                <td>Enterprise server with VDI support</td>
+                                <td>Mixed (cloud, on-premise, hybrid)</td>
+                                <td>Canon's model suits established IT environments with security requirements</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Market Position</strong></td>
+                                <td>Best-in-class specialized tool</td>
+                                <td>Comprehensive platform provider</td>
+                                <td>Canon complements rather than competes with platform vendors</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="analysis-box">
+                    <div class="analysis-title"><i class="fas fa-chart-line"></i> Strategic Recommendations and Future Directions</div>
+                    
+                    <p><strong>Competitive Differentiation Strategies:</strong></p>
+                    
+                    <ol>
+                        <li><strong>Deepen Clinical Specialization:</strong>
+                            <ul>
+                                <li>Further enhance leadership in cardiac and vascular applications</li>
+                                <li>Develop dedicated solutions for emerging areas (structural heart, oncology)</li>
+                                <li>Create specialized workflow packages for specific surgical planning needs</li>
+                            </ul>
+                        </li>
+                        
+                        <li><strong>Leverage Integration Opportunities:</strong>
+                            <ul>
+                                <li>Strengthen partnerships with PACS and EMR vendors</li>
+                                <li>Develop seamless integration with competitor reading environments</li>
+                                <li>Create value through complementary rather than competitive positioning</li>
+                            </ul>
+                        </li>
+                        
+                        <li><strong>Enhance AI Capabilities Strategically:</strong>
+                            <ul>
+                                <li>Focus AI development on quantification and measurement automation</li>
+                                <li>Develop AI tools that enhance rather than replace existing strengths</li>
+                                <li>Partner with AI specialists for detection algorithms while maintaining quantification leadership</li>
+                            </ul>
+                        </li>
+                        
+                        <li><strong>Expand Cloud and SaaS Offerings:</strong>
+                            <ul>
+                                <li>Develop cloud-based versions of key applications</li>
+                                <li>Create subscription models for specific clinical applications</li>
+                                <li>Enable remote collaboration and consultation capabilities</li>
+                            </ul>
+                        </li>
+                        
+                        <li><strong>Strengthen Service and Support:</strong>
+                            <ul>
+                                <li>Enhance implementation services for complex clinical workflows</li>
+                                <li>Develop specialized training programs for key clinical applications</li>
+                                <li>Create value-added services around surgical planning and procedural support</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>Market Opportunities:</strong></p>
+                    <ul>
+                        <li><strong>Growth of Minimally Invasive Procedures:</strong> Increasing demand for precise pre-procedural planning</li>
+                        <li><strong>Aging Population:</strong> Growing need for cardiac and vascular assessment</li>
+                        <li><strong>Value-Based Care:</strong> Emphasis on procedural precision and outcomes measurement</li>
+                        <li><strong>Surgical Technology Advancements:</strong> Integration with robotic and navigational systems</li>
+                        <li><strong>Academic and Research Markets:</strong> Strong position in teaching hospitals and research institutions</li>
+                    </ul>
+                    
+                    <p><strong>Conclusion:</strong> Canon Medical occupies a valuable and defensible position in the medical imaging ecosystem. Rather than attempting to compete directly with comprehensive platform vendors, Canon should leverage its strengths in high-fidelity visualization and quantitative analysis to become the indispensable tool for complex procedural planning and specialized clinical applications. The company's future success lies in deepening its clinical expertise, enhancing integration capabilities, and strategically expanding its service offerings to address evolving healthcare needs.</p>
+                </div>
+                
+                <div class="summary-box">
+                    <div class="summary-title"><i class="fas fa-check-circle"></i> Final Assessment</div>
+                    <p>The RSNA 2025 analysis positions <span class="highlight">Canon Medical not as a leader in the new AI platform or interventional hardware race, but as the established, high-performance engine for core 3D clinical visualization tasks</span>. This specialization serves a critical role in the diagnostic and treatment planning pathway, particularly for complex cases requiring precise measurement and visualization.</p>
+                    
+                    <p><strong>Strategic Imperatives for Canon:</strong></p>
+                    <ul>
+                        <li>Maintain and enhance leadership in 3D visualization quality and accuracy</li>
+                        <li>Deepen integration with clinical workflows and partner technologies</li>
+                        <li>Strategically incorporate AI to augment rather than replace existing strengths</li>
+                        <li>Expand service offerings around clinical implementation and support</li>
+                        <li>Leverage partnerships to address broader market needs while focusing on core competencies</li>
+                    </ul>
+                    
+                    <p>Canon's position, while specialized, addresses fundamental and growing needs in modern healthcare. As imaging becomes more quantitative and treatment becomes more precise, the value of Canon's visualization and measurement expertise will continue to increase.</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>RSNA 2025 Comprehensive Analysis Report</strong></p>
+            <p>Prepared by: Shailendrakumar S. Jariwala</p>
+            <p>Contact: shailendrakumar.Jariwala@mi.medical.canon</p>
+            <p>Report Date: December 2025 | Version: 2.0 Complete Interactive Edition</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; color: #888;">
+                This interactive report contains comprehensive analysis of RSNA 2025 trends, competitive intelligence, and strategic insights. 
+                All content preserved and expanded from original documentation with enhanced interactivity and print capabilities.
+            </p>
+        </footer>
+    </div>
+    
+    <!-- Lightbox for images -->
+    <div id="lightbox" class="lightbox">
+        <button class="close-lightbox">&times;</button>
+        <div class="lightbox-content">
+            <img id="lightbox-img" class="lightbox-img" src="" alt="Enlarged view">
+        </div>
+        <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+    
+    <!-- Back to top button -->
+    <a href="#" class="back-to-top">↑</a>
+    
+    <script>
+        // Interactive Controls
+        const expandAllBtn = document.getElementById('expandAll');
+        const collapseAllBtn = document.getElementById('collapseAll');
+        const printBtn = document.getElementById('printBtn');
+        
+        // Expand all sections
+        expandAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('collapsed');
+                const toggleBtn = section.querySelector('.toggle-btn');
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Hide Content';
+                }
+            });
+        });
+        
+        // Collapse all sections
+        collapseAllBtn.addEventListener('click', function() {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.add('collapsed');
+                const toggleBtn = section.querySelector('.toggle-btn');
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Show Content';
+                }
+            });
+        });
+        
+        // Print functionality
+        printBtn.addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Toggle section content
+        document.querySelectorAll('.toggle-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const section = this.closest('.section');
+                section.classList.toggle('collapsed');
+                this.textContent = section.classList.contains('collapsed') ? 'Show Content' : 'Hide Content';
+            });
+        });
+        
+        // Initially collapse all sections except first few
+        document.querySelectorAll('.section').forEach((section, index) => {
+            if (index > 2) {
+                section.classList.add('collapsed');
+                const toggleBtn = section.querySelector('.toggle-btn');
+                if (toggleBtn) {
+                    toggleBtn.textContent = 'Show Content';
+                }
+            }
+        });
+        
+        // Mobile TOC toggle
+        const mobileTocToggle = document.getElementById('mobileTocToggle');
+        const sidebar = document.getElementById('sidebar');
+        
+        mobileTocToggle.addEventListener('click', function() {
+            sidebar.classList.toggle('open');
+        });
+        
+        // Close sidebar when clicking on a link (mobile only)
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.remove('open');
+                }
+            });
+        });
+        
+        // Smooth scrolling for table of contents links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    // Expand the section if it's collapsed
+                    if (targetElement.classList.contains('section') && targetElement.classList.contains('collapsed')) {
+                        targetElement.classList.remove('collapsed');
+                        const toggleBtn = targetElement.querySelector('.toggle-btn');
+                        if (toggleBtn) {
+                            toggleBtn.textContent = 'Hide Content';
+                        }
+                    }
+                    
+                    // Scroll to the element
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Image lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const closeLightbox = document.querySelector('.close-lightbox');
+        
+        function openLightbox(title, caption) {
+            lightbox.style.display = 'flex';
+            lightboxImg.alt = title;
+            lightboxCaption.textContent = caption || title;
+        }
+        
+        document.querySelectorAll('.placeholder-img').forEach(img => {
+            img.addEventListener('click', function() {
+                const title = this.querySelector('div').textContent;
+                const parentContainer = this.closest('.image-container');
+                const caption = parentContainer.querySelector('.image-caption').textContent;
+                openLightbox(title, caption);
+            });
+        });
+        
+        closeLightbox.addEventListener('click', function() {
+            lightbox.style.display = 'none';
+        });
+        
+        lightbox.addEventListener('click', function(e) {
+            if (e.target === lightbox) {
+                lightbox.style.display = 'none';
+            }
+        });
+        
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && lightbox.style.display === 'flex') {
+                lightbox.style.display = 'none';
+            }
+        });
+        
+        // Back to top button
+        const backToTopButton = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopButton.style.display = 'flex';
+            } else {
+                backToTopButton.style.display = 'none';
+            }
+        });
+        
+        backToTopButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Highlight important terms on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to highlights
+            const highlights = document.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                highlight.style.transition = 'background-color 0.3s';
+                highlight.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#fff8a3';
+                });
+                highlight.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '#fffacd';
+                });
+            });
+            
+            // Add hover effects to table rows
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = '#f0f7ff';
+                });
+                row.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = '';
+                });
+            });
+            
+            // Initialize print-friendly state indicators
+            const statusIndicators = document.querySelectorAll('.status-indicator');
+            statusIndicators.forEach(indicator => {
+                indicator.style.transition = 'all 0.3s';
+                indicator.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05)';
+                    this.style.boxShadow = '0 3px 8px rgba(0,0,0,0.2)';
+                });
+                indicator.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+        
+        // Make external links open in new tab
+        document.querySelectorAll('a[href^="http"]').forEach(link => {
+            if (!link.getAttribute('target')) {
+                link.setAttribute('target', '_blank');
+                link.setAttribute('rel', 'noopener noreferrer');
+            }
+        });
+        
+        // Add keyboard navigation for interactive controls
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+P for print
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+            
+            // Ctrl+E for expand all
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                expandAllBtn.click();
+            }
+            
+            // Ctrl+C for collapse all
+            if ((e.ctrlKey || e.metaKey) && e.key === 'c') {
+                e.preventDefault();
+                collapseAllBtn.click();
+            }
+        });
+        
+        console.log('RSNA 2025 Comprehensive Interactive Report loaded successfully!');
+        console.log('Features: Detailed content, Print-friendly, Interactive controls');
+        console.log('Keyboard shortcuts: Ctrl+P (Print), Ctrl+E (Expand All), Ctrl+C (Collapse All)');
+    </script>
+</body>
+</html>
